@@ -1,0 +1,27 @@
+.button1:hover {
+    background-color: #4CAF50;
+    color: white;
+  }
+  .container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .form_container{
+    width: 400px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .input {
+    outline: none;
+    border: none;
+    width: 370px;
+    padding: 15px;
+  }
+  
