@@ -13,34 +13,66 @@ const express = require('express');
 const router = express.Router();
 
 
- const logout = (req, res, next) => {
-    const cookies = req.headers.cookie;
-    const prevToken = cookies.split("=")[1];
-    if(!prevToken) {
-        return res.status(400).json({message: "Couldn't find token"});
-    }
-    jwt.verify(String(prevToken),process.env.JWT_SECRET_KEY, (err,user) => {
-        if (err) {
-            console.log(err);
-            return res.status(403).json({ message: "Authentification failed "});
+
+
+ const forget = async (req, res, next) => {
+    const { email } = req.body;
+  
+    try {
+      const user = await User.findOne({ email });
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Generate a password reset token and store it in the user object
+      const resetToken = jwt.sign(
+        { id: user._id },
+        process.env.JWT_SECRET_KEY,
+        { expiresIn: '15m' }
+      );
+      user.resetToken = resetToken;
+      await user.save();
+  
+      // Send an email to the user with a link to reset password
+      // You can use a nodemailer or any other email library to send emails
+      // Here is an example using nodemailer:
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: "getawayvoy.services@gmail.com",
+          pass: "byoxgpbbfanfopju",
+        },
+      });
+  
+      const mailOptions = {
+        from: "getawayvoy.services@gmail.com",
+        to: email,
+        subject: 'Password reset request',
+        html: `
+        <p>You have requested to reset your password. Click the link below to reset it:</p>
+        <a href="http://localhost:3000/reset-password/${resetToken}">http://localhost:3000/reset-password/${resetToken}</a>
+      `,
+      };
+  
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log(error);
+          return res.status(500).json({ message: 'Failed to send email' });
+        } else {
+          console.log('Email sent: ' + info.response);
+          return res.status(200).json({ message: 'Email sent' });
         }
-        res.clearCookie(`${user.id }`);
-        req.cookies[`${user.id}`] = "";
-
-     return res.status(200).json({ message: "successfully Logged Out"})
-// if(req.cookies[`${existingUser._id}`]) {
-//     req.cookies[`${existingUser._id}`] = ""
-// }
-
-
-
-
-    });
-
- }
+      });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  };
 
 
  
+
 
 
 
