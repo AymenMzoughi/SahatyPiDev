@@ -26,6 +26,16 @@ const addUser = async (req, res, next) => {
   }
 };
 
+const showUsers = async (req, res) => {
+  try {
+    const docs = await UserModel.find({});
+    res.json(docs);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
+  }
+};
+
 
   
   module.exports = { addUser, showUsers, deleteUser, updateUser, findUser };
