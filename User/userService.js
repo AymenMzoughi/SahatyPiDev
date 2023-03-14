@@ -6,23 +6,15 @@ const ERROR_MESSAGES = {
   USER_NOT_FOUND: 'User not found',
 };
 
-const addUser = async (req, res, next) => {
+
+
+const showUsers = async (req, res) => {
   try {
-    const { nom, prenom, mail, numero, password, pdp, docVerif } = req.body;
-    const User = new UserModel({
-      nom,
-      prenom,
-      mail,
-      numero,
-      password,
-      pdp,
-      docVerif,
-    });
-    await User.save();
-    res.status(201).json({ User });
+    const docs = await UserModel.find({});
+    res.json(docs);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: ERROR_MESSAGES.UNABLE_TO_ADD });
+    res.status(500).json({ message: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
   }
 };
 
