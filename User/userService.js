@@ -11,23 +11,23 @@ const ERROR_MESSAGES = {
 
 
 
-const updateUser = async (req, res) => {
+
+
+  const findUser = async (req, res) => {
     try {
-      const id = req.params.id;
-      const updatedUser = await UserModel.findByIdAndUpdate(id, req.body, {
-        useFindAndModify: false,
-        new: true, // pour renvoyer le document mis à jour plutôt que l'ancien document
-      });
-      if (!updatedUser) {
-        return res.status(404).json({ message: ERROR_MESSAGES.USER_NOT_FOUND });
-      }
-      res.json(updatedUser);
+      const { searchValue } = req.query;
+      const users = await UserModel.find({ $or: [
+        { nom: new RegExp(searchValue, 'i') },
+        { prenom: new RegExp(searchValue, 'i') },
+        { mail: new RegExp(searchValue, 'i') },
+        { numero: new RegExp(searchValue, 'i') },
+      ]});
+      res.json(users);
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
     }
   };
-
   
   module.exports = { addUser, showUsers, deleteUser, updateUser, findUser };
     
