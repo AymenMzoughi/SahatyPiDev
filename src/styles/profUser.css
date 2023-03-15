@@ -1,0 +1,39 @@
+.user-profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-color: #3aa9d4;
+  }
+  
+  .user-profile-card {
+    width: 80%;
+    max-width: 500px;
+    background-color: rgb(27, 141, 131);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 2rem;
+    margin: 2rem;
+  }
+  
+  .user-profile-card .MuiCardContent-root {
+    margin-top: 1.5rem;
+  }
+  
+  .user-profile-card .MuiTypography-h6 {
+    margin-bottom: 1.5rem;
+  }
+  
+  .user-profile-card .MuiButton-root {
+    text-transform: none;
+    font-weight: bold;
+  }
+  
+  .user-profile-card .MuiButton-contained {
+    background-color: #1565c0;
+  }
+  
+  .user-profile-card .MuiButton-contained:hover {
+    background-color: #0d47a1;
+  }
+  
