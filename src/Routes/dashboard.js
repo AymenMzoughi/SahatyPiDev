@@ -2,13 +2,13 @@ import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Topbar from "../scenes/global/Topbar";
 import Sidebar from "../scenes/global/Sidebar";
-import Team from "../component/ListUser";
+import Team from "../components/ListUser";
 
-import Form from "../component/aadUser";
+import Form from "../components/aadUser";
 
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { ColorModeContext, useMode } from "../theme";
-import UserProfile from "../component/userProfile";
+import UserProfile from "../components/userProfile";
 
 function Dashboard() {
   const [theme, colorMode] = useMode();
@@ -24,7 +24,7 @@ function Dashboard() {
             <Topbar setIsSidebar={setIsSidebar} />
             <Routes>
               <Route path="/team" element={<Team />} />
-              <Route path="/profil" element={<UserProfile />} />
+              <Route path="/profilAdmin" element={<UserProfile />} />
               <Route path="/form" element={<Form />} />
             </Routes>
           </main>

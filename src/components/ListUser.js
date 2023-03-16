@@ -36,16 +36,14 @@ function UserList() {
 
   const handleUpdate = (id) => {
     const userToUpdate = users.find(user => user._id === id);
-    navigator.push({
-      pathname: '/updateUser',
-      state: { userToUpdate: userToUpdate }
-    });
+    navigate(`../form`, { state: { userToUpdate } });
+
   };
 
   const handleProfile = (id) => {
     const userToShow = users.find(user => user._id === id);
     console.log(id);
-    navigate(`../profile`, { state: { userToShow } });
+    navigate(`../profile/Admin`, { state: { userToShow } });
   };
   
 
