@@ -17,7 +17,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from "react-router-dom";
-import {IconButton } from '@material-ui/core'
+import {IconButton } from '@material-ui/core';
 
 const SignIn= ()=> {
   return (
@@ -46,11 +46,11 @@ export default function SignInSide() {
       window.open("http://localhost:3000/user/auth/google", "_self");
     };
     const github = () => {
-      window.open("http://localhost:3000/auth/github", "_self");
+      window.open("http://localhost:3000/user/auth/github", "_self");
     };
   
     const facebook = () => {
-      window.open("http://localhost:3000/auth/facebook", "_self");
+      window.open("http://localhost:3000/user/auth/facebook", "_self");
     };
     
 
@@ -72,6 +72,9 @@ export default function SignInSide() {
           }
           if(res.data.user.role==='Admin'){
             navigate(`/dash/team`, { state: { userToShow } });
+          }
+          if(res.data.user.role==='Pharmacist'){
+            navigate(`/ProfileDoc`, { state: { userToShow } });
           }
         } catch (err) {
           setError(err.response.data.message);
@@ -98,13 +101,13 @@ export default function SignInSide() {
         />
         <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <Box sx={{ backgroundColor: '#2196f3', padding: '10px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <IconButton sx={{ bgcolor: '#1877f2', mr: 1 }} onClick={google}>
+              <IconButton sx={{ bgcolor: '#1877f2', mr: 1 }} onClick={facebook}>
                 <FacebookIcon  />
               </IconButton>
-              <IconButton >
+              <IconButton sx={{ bgcolor: '#1877f2', mr: 1 }} onClick={google}>
                 <GoogleIcon  />
               </IconButton>
-              <IconButton >
+              <IconButton sx={{ bgcolor: '#1877f2', mr: 1 }} onClick={github}>
                 <LinkedInIcon/>
               </IconButton>
             </Box>

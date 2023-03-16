@@ -4,13 +4,20 @@ import logo from '../assets/img/Capture_d_écran_2023-03-15_130159-removebg-prev
 import navIcon1 from '../assets/img/nav-icon1.svg';
 import navIcon2 from '../assets/img/nav-icon2.svg';
 import navIcon3 from '../assets/img/nav-icon3.svg';
+import {  IconButton } from "@mui/material";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
+import { useNavigate } from "react-router-dom";
+
 import { HashLink } from 'react-router-hash-link';
 import {
   BrowserRouter as Router
 } from "react-router-dom";
 
 const NavBarD = ()=>  {
-
+  const navigate =useNavigate();
+  const handleLogout = () => {
+    navigate(`/signin`);
+  }
   const [activeLink, setActiveLink] = useState('home');
   const [scrolled, setScrolled] = useState(false);
 
@@ -31,6 +38,7 @@ const NavBarD = ()=>  {
   const onUpdateActiveLink = (value) => {
     setActiveLink(value);
   }
+  
 
   return (
       <Navbar expand="md" className={scrolled ? "scrolled" : ""}>
@@ -56,7 +64,10 @@ const NavBarD = ()=>  {
                 <a href="#"><img src={navIcon2} alt="" /></a>
                 <a href="#"><img src={navIcon3} alt="" /></a>
               </div>
-             
+        <IconButton onClick={handleLogout}>
+        <span>Let’s Deconnect</span>
+          <LogoutOutlinedIcon />
+         </IconButton>
             </span>
           </Navbar.Collapse>
         </Container>

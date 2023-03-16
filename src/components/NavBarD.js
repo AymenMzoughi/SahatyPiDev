@@ -8,9 +8,13 @@ import { HashLink } from 'react-router-hash-link';
 import {
   BrowserRouter as Router
 } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+import {  IconButton } from "@mui/material";
+import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 const NavBarD = ()=>  {
-
+  const navigate =useNavigate();
+  const handleLogout = () => {
+    navigate(`/signin`);}
   const [activeLink, setActiveLink] = useState('home');
   const [scrolled, setScrolled] = useState(false);
 
@@ -31,6 +35,7 @@ const NavBarD = ()=>  {
   const onUpdateActiveLink = (value) => {
     setActiveLink(value);
   }
+
 
   return (
       <Navbar expand="md" className={scrolled ? "scrolled" : ""}>
@@ -54,7 +59,10 @@ const NavBarD = ()=>  {
                 <a href="#"><img src={navIcon2} alt="" /></a>
                 <a href="#"><img src={navIcon3} alt="" /></a>
               </div>
-             
+              <IconButton onClick={handleLogout}>
+        <span>Let’s Deconnect</span>
+          <LogoutOutlinedIcon />
+         </IconButton>
             </span>
           </Navbar.Collapse>
         </Container>
