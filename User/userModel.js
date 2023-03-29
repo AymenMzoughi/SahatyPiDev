@@ -8,6 +8,7 @@ var User=new Schema({
     numero: String,
     password: String,
     pdp: String,
+    role: String,
     docVerif: String,
 })
 
