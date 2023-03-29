@@ -57,7 +57,56 @@ const addMedicalRecord = async (req, res, next) => {
   
 
 
-    
+    const deleteMedicalRecord = async (req, res, next) => {
+
+       const medicalRecordId=req.params.id
+        try {
+            const existingMedicalRecord = await MedicalRecord.findById(medicalRecordId, '_id');
+         
+          console.log(req.params.id)
+          if (!existingMedicalRecord) {
+            return res.status(404).json({ error: 'Medical record not found' });
+          }
+      
+          // Delete associated medical images
+          await MedicalImage.deleteMany({ medicalRecordId });
+      
+          // Delete medical record
+          await MedicalRecord.findByIdAndDelete(medicalRecordId);
+      
+          res.json({ message: 'Medical record deleted successfully' });
+        } catch (err) {
+          console.error(err);
+          res.status(500).send('Internal Server Error');
+        }
+      };
+
+
+      const deleteImageFromMedicalRecord = async (req, res, next) => {
+        try {
+          const { medicalImageId, doctorId } = req.params;
+      
+      
+          // Find the medical image by ID
+          const medicalImage = await MedicalImage.findById(medicalImageId);
+          if (!medicalImage) {
+            return res.status(404).json({ message: 'Invalid medical image ID' });
+          }
+      
+          // Check if the doctor ID matches the one associated with the medical image
+          if (medicalImage.doctorId.toString() !== doctorId.toString()) {
+            return res.status(403).json({ message: 'The specified doctor did not add this image' });
+          }
+      
+          // Delete the medical image
+          await medicalImage.delete();
+      
+          res.json({ message: 'Medical image deleted successfully' });
+        } catch (error) {
+          console.error(error);
+          res.status(500).send('Internal Server Error');
+        }
+      };
       
 
-  module.exports = { addMedicalRecord};
+  module.exports = { addMedicalRecord, deleteMedicalRecord, deleteImageFromMedicalRecord };

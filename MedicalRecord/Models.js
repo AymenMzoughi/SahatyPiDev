@@ -18,7 +18,15 @@ const medicalRecordSchema = new Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
-
+medicalImageSchema.methods.delete = async function() {
+  const medicalRecord = await MedicalRecord.findById(this.medicalRecordId);
+  const index = medicalRecord.medicalImages.indexOf(this._id);
+  if (index !== -1) {
+    medicalRecord.medicalImages.splice(index, 1);
+    await medicalRecord.save();
+  }
+  await this.deleteOne();
+};
 
 const MedicalImage = mongoose.model('MedicalImage', medicalImageSchema);
 const MedicalRecord = mongoose.model('MedicalRecord', medicalRecordSchema);
