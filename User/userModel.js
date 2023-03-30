@@ -2,8 +2,8 @@ var mongoose=require("mongoose")
 var Schema=mongoose.Schema
 
 var User=new Schema({
-    nom:String,
-    prenom:String,
+    firstname:String,
+    lastname:String,
     mail:String,
     numero: String,
     password: String,

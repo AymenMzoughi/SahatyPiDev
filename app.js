@@ -1,8 +1,12 @@
 
 const express = require("express");
 const app = express();
+app.use(express.static('uploads'));
+const cors = require('cors');
 const mongoose = require("mongoose");
 var medicalrecordRoutes = require("./MedicalRecord/Controller");
+
+app.use(cors());
 app.use(express.json())
 app.use("/MedicalRecord", medicalrecordRoutes);
 

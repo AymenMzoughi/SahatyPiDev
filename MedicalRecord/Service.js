@@ -2,58 +2,49 @@ const UserModel = require('../User/userModel');
 const { MedicalRecord, MedicalImage } = require ('./Models');
 
 
-const addMedicalRecord = async (req, res, next) => {
-    try {
-      const { patientId, doctorId, images } = req.body;
+    const addMedicalRecord = async (req, res, next) => {
+      try {
+        const { patientId, doctorId, imageType } = req.body;
+        const images = req.files;
 
-      // Nchouf ken el patient exist
-      const existingPatient = await UserModel.findById(patientId);
-      if (!existingPatient) {
-        return res.status(404).json({ error: 'Patient not found' });
-      }
-      // Nchouf ken role = patient
-      if (existingPatient.role !== "Patient") {
-        return res.status(400).json({ error: 'User is not a patient' });
-      }
-  
-      // Check if the medical record already exists
-      let existingMedicalRecord = await MedicalRecord.findOne({ patientId });
-      if (!existingMedicalRecord) {
-        // Create a new medical record if it doesn't exist
-        existingMedicalRecord = new MedicalRecord({ patientId, doctorId });
+        // Check if the medical record already exists
+        let existingMedicalRecord = await MedicalRecord.findOne({ patientId });
+        if (!existingMedicalRecord) {
+          // Create a new medical record if it doesn't exist
+          existingMedicalRecord = new MedicalRecord({ patientId, doctorId });
+          await existingMedicalRecord.save();
+        } else {
+          // Update the doctor id of the existing medical record
+          existingMedicalRecord.doctorId = doctorId;
+          await existingMedicalRecord.save();
+        }
+
+        // Create an array of new medical images to be added
+        const newMedicalImages = images.map((image) => ({
+          doctorId,
+          medicalRecordId: existingMedicalRecord._id,
+          imageUrl: image.path,
+          imageName: image.filename,
+          imageType: imageType,
+        }));
+        
+        // Insert the new medical images
+        const savedMedicalImages = await MedicalImage.insertMany(newMedicalImages);
+
+        // Add the new medical images to the existing medical record
+        existingMedicalRecord.medicalImages.push(...savedMedicalImages.map((image) => image._id));
         await existingMedicalRecord.save();
-      } else {
-        // Update the doctor id of the existing medical record
-        existingMedicalRecord.doctorId = doctorId;
-        await existingMedicalRecord.save();
+
+        res.json({
+          medicalRecord: existingMedicalRecord,
+          medicalImages: savedMedicalImages,
+        });
+
+      } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
       }
-  
-      // Create an array of new medical images to be added
-      const newMedicalImages = images.map((image) => ({
-        doctorId,
-        medicalRecordId: existingMedicalRecord._id,
-        imageUrl: image.imageUrl,
-        imageName: image.imageUrl.split('/').pop(),
-        imageType: image.imageType,
-      }));
-  
-      // Insert the new medical images
-      const savedMedicalImages = await MedicalImage.insertMany(newMedicalImages);
-  
-      // Add the new medical images to the existing medical record
-      existingMedicalRecord.medicalImages.push(...savedMedicalImages.map((image) => image._id));
-      await existingMedicalRecord.save();
-  
-      res.json({
-        medicalRecord: existingMedicalRecord,
-        medicalImages: savedMedicalImages,
-      });
-  
-    } catch (err) {
-      console.error(err);
-      res.status(500).send('Internal Server Error');
-    }
-  };
+    };
   
 
 
@@ -109,4 +100,37 @@ const addMedicalRecord = async (req, res, next) => {
       };
       
 
-  module.exports = { addMedicalRecord, deleteMedicalRecord, deleteImageFromMedicalRecord };
+      const getAllMedicalRecords = async (req, res, next) => {
+        try {
+          // Find all medical records and populate the patientId field with the corresponding patient document
+          const medicalRecords = await MedicalRecord.find().populate('patientId');
+      
+          // Find all medical images associated with the medical records
+          const medicalImages = await MedicalImage.find({ medicalRecordId: { $in: medicalRecords.map(record => record._id) } });
+      
+          // Group the medical images by medical record ID
+          const medicalImagesByRecordId = medicalImages.reduce((acc, image) => {
+            acc[image.medicalRecordId] = acc[image.medicalRecordId] || [];
+            acc[image.medicalRecordId].push(image);
+            return acc;
+          }, {});
+      
+          // Combine the medical records with their associated medical images
+          const medicalRecordsWithImages = medicalRecords.map(record => {
+            const images = medicalImagesByRecordId[record._id] || [];
+            return { 
+              _id: record._id,
+              patientName: `${record.patientId.firstname} ${record.patientId.lastname}`,
+              medicalImages: images 
+            };
+          });
+      
+          res.json(medicalRecordsWithImages);
+        } catch (err) {
+          console.error(err);
+          res.status(500).send('Internal Server Error');
+        }
+      };
+      
+
+  module.exports = { addMedicalRecord, deleteMedicalRecord, deleteImageFromMedicalRecord, getAllMedicalRecords};
