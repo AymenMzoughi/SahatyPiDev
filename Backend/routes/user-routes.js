@@ -36,6 +36,7 @@ const router = express.Router();
  router.get("/get-all-approved-doctors", authMiddleware,getAllApprovadDoctors);
  router.post("/book-appointment", authMiddleware, bookAppointment);
  router.post("/check-booking-avilability", authMiddleware,checkBookAvailability);
+ router.get("/get-appointment-id", authMiddleware,getAppointmentById);
 // Verify token 
 router.get('/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] }));
