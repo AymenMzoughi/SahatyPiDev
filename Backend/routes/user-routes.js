@@ -22,10 +22,14 @@ const router = express.Router();
  router.post("/logout", verifyToken, logout);
  router.post('/forgot-password', forget);
  router.post('/reset-password', reset);
+ router.post("/get-info-id", authMiddleware,getinfouserByid);
+ 
 // Verify token 
 router.get('/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] }));
   router.get('/auth/google/callback',
   passport.authenticate('google', { successRedirect: '/', failureRedirect: '/login' }));
+
+
 
 module.exports = router;
