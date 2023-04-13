@@ -10,6 +10,7 @@ const {
       forget,
       reset,
       applyDoctor,
+      markNotificationAsSeen,
       
     } = require('../controllers/user-controller');
 
@@ -25,6 +26,7 @@ const router = express.Router();
  router.post('/reset-password', reset);
  router.post("/get-info-id", authMiddleware,getinfouserByid);
  router.post("/apply-doctor-account", authMiddleware,applyDoctor);
+ router.post("/notifications-as-seen",authMiddleware,markNotificationAsSeen);
 // Verify token 
 router.get('/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] }));
