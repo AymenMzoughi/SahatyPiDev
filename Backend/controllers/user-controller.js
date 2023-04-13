@@ -12,18 +12,28 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const express = require('express');
 const router = express.Router();
 
-const  getAllApprovadDoctors=async(req,res)=>{
+const  bookAppointment=async(req,res)=>{
     try {
-        const doctors = await Doctor.find({ status: "approved" },"firstName lastName");
+        req.body.status = "pending";
+        req.body.date = moment(req.body.date, "DD-MM-YYYY").toISOString();
+        req.body.time = moment(req.body.time, "HH:mm").toISOString();
+        const newAppointment = new Appointment(req.body);
+        await newAppointment.save();
+        const user = await User.findOne({ _id: req.body.doctorInfo.userId });
+        user.unseenNotifications.push({
+          type: "new-appointment-request",
+          message: `A new appointment request has been made by ${req.body.userInfo.name}`,
+          onClickPath: "/doctor/appointments",
+        });
+        await user.save();
         res.status(200).send({
-          message: "Approved doctors fetched successfully",
+          message: "Appointment booked successfully",
           success: true,
-          data: doctors,
         });
       } catch (error) {
         console.log(error);
         res.status(500).send({
-          message: "Error fetching approved doctors",
+          message: "Error booking appointment",
           success: false,
           error,
         });
@@ -33,7 +43,7 @@ const  getAllApprovadDoctors=async(req,res)=>{
 
 
 
-
+exports.bookAppointment=bookAppointment
 exports.getAllApprovadDoctors=getAllApprovadDoctors
 exports.deleteAllNotification=deleteAllNotification
 exports.markNotificationAsSeen=markNotificationAsSeen
