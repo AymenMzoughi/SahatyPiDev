@@ -12,20 +12,16 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const express = require('express');
 const router = express.Router();
 
-const  markNotificationAsSeen=async(req,res)=>{
-
+const  deleteAllNotification=async(req,res)=>{
     try {
         const user = await User.findOne({ _id: req.body.userId });
-        const unseenNotifications = user.unseenNotifications;
-        const seenNotifications = user.seenNotifications;
-        seenNotifications.push(...unseenNotifications);
+        user.seenNotifications = [];
         user.unseenNotifications = [];
-        user.seenNotifications = seenNotifications;
         const updatedUser = await user.save();
         updatedUser.password = undefined;
         res.status(200).send({
           success: true,
-          message: "All notifications marked as seen",
+          message: "All notifications cleared",
           data: updatedUser,
         });
       } catch (error) {
@@ -36,10 +32,8 @@ const  markNotificationAsSeen=async(req,res)=>{
           error,
         });
       }
-    }
-  ;
-  
-    
+    };
+exports.deleteAllNotification=deleteAllNotification
 exports.markNotificationAsSeen=markNotificationAsSeen
 exports.applyDoctor=applyDoctor
 exports.getinfouserByid=getuserinfobyid
