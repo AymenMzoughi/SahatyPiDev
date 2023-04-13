@@ -12,6 +12,7 @@ const {
       applyDoctor,
       markNotificationAsSeen,
       deleteAllNotification,
+      getAllApprovadDoctors,
       
     } = require('../controllers/user-controller');
 
@@ -29,6 +30,7 @@ const router = express.Router();
  router.post("/apply-doctor-account", authMiddleware,applyDoctor);
  router.post("/notifications-as-seen",authMiddleware,markNotificationAsSeen);
  router.get("/get-all-approved-doctors", authMiddleware,deleteAllNotification);
+ router.get("/get-all-approved-doctors", authMiddleware,getAllApprovadDoctors);
 // Verify token 
 router.get('/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] }));

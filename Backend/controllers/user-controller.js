@@ -12,27 +12,29 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const express = require('express');
 const router = express.Router();
 
-const  deleteAllNotification=async(req,res)=>{
+const  getAllApprovadDoctors=async(req,res)=>{
     try {
-        const user = await User.findOne({ _id: req.body.userId });
-        user.seenNotifications = [];
-        user.unseenNotifications = [];
-        const updatedUser = await user.save();
-        updatedUser.password = undefined;
+        const doctors = await Doctor.find({ status: "approved" },"firstName lastName");
         res.status(200).send({
+          message: "Approved doctors fetched successfully",
           success: true,
-          message: "All notifications cleared",
-          data: updatedUser,
+          data: doctors,
         });
       } catch (error) {
         console.log(error);
         res.status(500).send({
-          message: "Error applying doctor account",
+          message: "Error fetching approved doctors",
           success: false,
           error,
         });
       }
     };
+
+
+
+
+
+exports.getAllApprovadDoctors=getAllApprovadDoctors
 exports.deleteAllNotification=deleteAllNotification
 exports.markNotificationAsSeen=markNotificationAsSeen
 exports.applyDoctor=applyDoctor
