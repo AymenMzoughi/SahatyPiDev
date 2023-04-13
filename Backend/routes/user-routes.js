@@ -9,6 +9,7 @@ const {
       logout,
       forget,
       reset,
+      applyDoctor,
       
     } = require('../controllers/user-controller');
 
@@ -23,7 +24,7 @@ const router = express.Router();
  router.post('/forgot-password', forget);
  router.post('/reset-password', reset);
  router.post("/get-info-id", authMiddleware,getinfouserByid);
- 
+ router.post("/apply-doctor-account", authMiddleware,applyDoctor);
 // Verify token 
 router.get('/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] }));
