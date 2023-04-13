@@ -14,6 +14,8 @@ const {
       deleteAllNotification,
       getAllApprovadDoctors,
       bookAppointment,
+      checkBookAppointment,
+      checkBookAvailability,
       
     } = require('../controllers/user-controller');
 
@@ -33,6 +35,7 @@ const router = express.Router();
  router.get("/get-all-approved-doctors", authMiddleware,deleteAllNotification);
  router.get("/get-all-approved-doctors", authMiddleware,getAllApprovadDoctors);
  router.post("/book-appointment", authMiddleware, bookAppointment);
+ router.post("/check-booking-avilability", authMiddleware,checkBookAvailability);
 // Verify token 
 router.get('/auth/google',
   passport.authenticate('google', { scope: ['profile', 'email'] }));

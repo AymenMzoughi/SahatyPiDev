@@ -12,30 +12,36 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 const express = require('express');
 const router = express.Router();
 
-const  bookAppointment=async(req,res)=>{
+const  checkBookAvailability=async(req,res)=>{
     try {
-        req.body.status = "pending";
-        req.body.date = moment(req.body.date, "DD-MM-YYYY").toISOString();
-        req.body.time = moment(req.body.time, "HH:mm").toISOString();
-        const newAppointment = new Appointment(req.body);
-        await newAppointment.save();
-        const user = await User.findOne({ _id: req.body.doctorInfo.userId });
-        user.unseenNotifications.push({
-          type: "new-appointment-request",
-          message: `A new appointment request has been made by ${req.body.userInfo.name}`,
-          onClickPath: "/doctor/appointments",
-        });
-        await user.save();
-        res.status(200).send({
-          message: "Appointment booked successfully",
-          success: true,
-        });
-      } catch (error) {
-        console.log(error);
-        res.status(500).send({
-          message: "Error booking appointment",
-          success: false,
-          error,
+        const date = moment(req.body.date, "DD-MM-YYYY").toISOString();
+    const fromTime = moment(req.body.time, "HH:mm")
+      .subtract(1, "hours")
+      .toISOString();
+    const toTime = moment(req.body.time, "HH:mm").add(1, "hours").toISOString();
+    const doctorId = req.body.doctorId;
+    const appointments = await Appointment.find({
+      doctorId,
+      date,
+      time: { $gte: fromTime, $lte: toTime },
+    });
+    if (appointments.length > 0) {
+      return res.status(200).send({
+        message: "Appointments not available",
+        success: false,
+      });
+    } else {
+      return res.status(200).send({
+        message: "Appointments available",
+        success: true,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: "Error booking appointment",
+      success: false,
+      error,
         });
       }
     };
@@ -43,6 +49,8 @@ const  bookAppointment=async(req,res)=>{
 
 
 
+
+exports.checkBookAvailability=checkBookAvailability
 exports.bookAppointment=bookAppointment
 exports.getAllApprovadDoctors=getAllApprovadDoctors
 exports.deleteAllNotification=deleteAllNotification
