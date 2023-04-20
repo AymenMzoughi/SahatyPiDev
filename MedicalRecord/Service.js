@@ -537,7 +537,114 @@ const deleteImageFromMedicalRecord = async (req, res, next) => {
 };
 
 
+const deleteAllergyFromMedicalRecord = async (req, res, next) => {
+  try {
+    const { allergyId, doctorId } = req.params;
 
+    const allergy = await Allergy.findById(allergyId);
+
+    if (!allergy) {
+      return res.status(404).json({ message: 'Invalid allergy ID' });
+    }
+
+    if (allergy.doctorId.toString() !== doctorId.toString()) {
+      logger.warn('The specified doctor tried to delete the allergy', {
+        timestamp: new Date().toISOString(),
+        allergyId,
+        doctorId,
+      });
+      return res.status(403).json({ message: 'The specified doctor did not add this allergy' });
+    }
+
+    await allergy.delete();
+
+    logger.info('Medical image deleted successfully', {
+      timestamp: new Date().toISOString(),
+      doctorId,
+      allergyId,
+    });
+
+    res.json({ message: 'Medical image deleted successfully' });
+  } catch (error) {
+    logger.error(error, {
+      timestamp: new Date().toISOString(),
+    });
+    res.status(500).send('Internal Server Error');
+  }
+};
+
+const deleteMedicationFromMedicalRecord = async (req, res, next) => {
+  try {
+    const { medicationId, doctorId } = req.params;
+
+    const medication = await Medication.findById(medicationId);
+
+    if (!medication) {
+      return res.status(404).json({ message: 'Invalid medication ID' });
+    }
+
+    if (medication.doctorId.toString() !== doctorId.toString()) {
+      logger.warn('The specified doctor tried to delete the medication', {
+        timestamp: new Date().toISOString(),
+        medicationId,
+        doctorId,
+      });
+      return res.status(403).json({ message: 'The specified doctor did not add this medication' });
+    }
+
+    await medication.delete();
+
+    logger.info('Medication deleted successfully', {
+      timestamp: new Date().toISOString(),
+      doctorId,
+      medicationId,
+    });
+
+    res.json({ message: 'Medication deleted successfully' });
+  } catch (error) {
+    logger.error(error, {
+      timestamp: new Date().toISOString(),
+    });
+    res.status(500).send('Internal Server Error');
+  }
+};
+    
+      
+const deleteTreatmentFromMedicalRecord = async (req, res, next) => {
+  try {
+    const { treatmentId, doctorId } = req.params;
+
+    const treatment = await Treatment.findById(treatmentId);
+
+    if (!treatment) {
+      return res.status(404).json({ message: 'Invalid treatment ID' });
+    }
+
+    if (treatment.doctorId.toString() !== doctorId.toString()) {
+      logger.warn('The specified doctor tried to delete the treatment', {
+        timestamp: new Date().toISOString(),
+        treatmentId,
+        doctorId,
+      });
+      return res.status(403).json({ message: 'The specified doctor did not add this treatment' });
+    }
+
+    await treatment.delete();
+
+    logger.info('Treatment deleted successfully', {
+      timestamp: new Date().toISOString(),
+      doctorId,
+      treatmentId,
+    });
+
+    res.json({ message: 'Treatment deleted successfully' });
+  } catch (error) {
+    logger.error(error, {
+      timestamp: new Date().toISOString(),
+    });
+    res.status(500).send('Internal Server Error');
+  }
+};
 
 
       const getAllMedicalRecords = async (req, res, next) => {
@@ -647,4 +754,7 @@ const deleteImageFromMedicalRecord = async (req, res, next) => {
     deleteImageFromMedicalRecord, 
     getAllMedicalRecords, 
     downloadFile, 
-    getMedicalRecordByPatientId};
+    getMedicalRecordByPatientId,
+    deleteAllergyFromMedicalRecord,
+    deleteMedicationFromMedicalRecord,
+    deleteTreatmentFromMedicalRecord};
