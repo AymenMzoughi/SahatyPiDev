@@ -14,9 +14,25 @@ const getAmbulances = async (req, res, next) => {
     }
   };
 
+// Add an ambulance
+const addAmbulance = async (req, res, next) => {
+    try {
+      const { name, latitude, longitude } = req.body;
+      const ambulance = new Ambulance({ name, latitude, longitude });
+      await ambulance.save();
+      res.status(201).json({ ambulance });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  };
+  
+
 
   
   module.exports = {
     getAmbulances,
+    addAmbulance,
+
   };
   
