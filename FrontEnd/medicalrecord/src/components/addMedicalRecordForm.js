@@ -23,6 +23,7 @@ const AddMedicalRecordForm = () => {
         }
       });
       console.log(response.data);
+      window.location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -93,7 +94,7 @@ const AddMedicalRecordForm = () => {
             className="form-control-file"
             id="images"
             multiple
-            accept="image/*"
+            accept="image/*, application/pdf"
             onChange={handleImageChange}
           />
         </div>
