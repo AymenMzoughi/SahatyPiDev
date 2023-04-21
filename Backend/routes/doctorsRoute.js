@@ -1,18 +1,18 @@
-// const express = require('express');
-// const authMiddleware = require("../middlewares/authMiddleware");
-// const {
+const express = require('express');
+const authMiddleware = require("../middlewares/authMiddleware");
+const {
 
-// getAppointmentsId,
-// changeAppointmentStatus,
-// updateDoctorProfile,
+getAppointmentsId,
+changeAppointmentStatus,
+updateDoctorProfile,
 
-// }=require('../controllers/doctor-controller');
+}=require('../controllers/doctor-controller');
 
-// const router = express.Router();
+const router = express.Router();
 
-// router.post("/updateDoctorProfile",authMiddleware,updateDoctorProfile);
-// router.get("getAppointmentsId", authMiddleware,getAppointmentsId)
-// router.post("/changeAppointmentStatus", authMiddleware,changeAppointmentStatus)
+router.post("/updateDoctorProfile",authMiddleware,updateDoctorProfile);
+router.get("getAppointmentsId", authMiddleware,getAppointmentsId)
+router.post("/changeAppointmentStatus", authMiddleware,changeAppointmentStatus)
 
 
-// module.exports = router;
+module.exports = router;
