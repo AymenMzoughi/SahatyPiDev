@@ -1,41 +1,43 @@
-const mongoose = require("mongoose");
-
-const userSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-    },
-    password: {
-      type: String,
-      required: true,
-    }, 
-    isDoctor: {
-      type: Boolean,
-      default: false,
-    },
-    isAdmin: {
-      type: Boolean,
-      default: false,
-    },
-    seenNotifications: {
-      type: Array,
-      default: [],
-    },
-    unseenNotifications: {
-      type: Array,
-      default: [],
-    },
+const userSchema = new Schema({
+  firstname: {
+    type: String,
+    required: true,
   },
-  {
-    timestamps: true,
-  }
-);
-
-const userModel = mongoose.model("users", userSchema);
-
-module.exports = userModel;
+  lastname: {
+    type: String,
+    require: true,
+  },
+  numero: {
+    type: Number,
+    require: true,
+  },
+  pdp: {
+    type: String,
+    require: true,
+  },
+  mail: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  role: { type: String },
+  password: {
+    type: String,
+    required: true,
+    minlength: 8,
+  },
+  token: {
+    type: String,
+  },
+  resetToken: { type: String },
+  seenNotifications: {
+    required: false,
+    type: Array,
+    default: [],
+  },
+  unseenNotifications: {
+    required: false,
+    type: Array,
+    default: [],
+  },
+});

@@ -18,12 +18,18 @@ const {
       bookAppointment,
       checkBookAppointment,
       checkBookAvailability,
+      addClaim,
+      deleteClaim,
+      updateClaim,
       
     } = require('../controllers/user-controller');
 
 
  
 const router = express.Router();
+router.post ("/addClaim", addClaim);
+router.post("/updateClaim/:claimId", updateClaim)
+router.delete("/deleteClaim/:claimId", deleteClaim)
  router.post("/signup", signup);
  router.post("/login", login);
  router.get("/user", verifyToken, getUser);
