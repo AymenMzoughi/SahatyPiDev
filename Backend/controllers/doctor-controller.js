@@ -1,5 +1,5 @@
 
-const Appointment = require("../models/appointmentModel");
+const Appointment = require("../model/appointmentModel");
 
 const updateDoctorProfile= async (req, res) => {
   try {
