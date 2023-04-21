@@ -1,4 +1,6 @@
 const express = require('express');
+const authMiddleware = require("../middlewares/authMiddleware");
+
 const passport = require('passport');
 const {
      signup,
