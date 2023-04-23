@@ -21,11 +21,11 @@ const ambulanceSchema = new mongoose.Schema({
   createdAt: { type: Date},
   latitude: {
     type: Number,
-    required: true
+
   },
   longitude: {
     type: Number,
-    required: true
+
   },
   longitudeUser:{
     type: Number,

@@ -7,8 +7,6 @@ import ambulanceIcon2 from "./unavailable.png";
 const AmbulanceServiceA = () => {
     const [ambulances, setAmbulances] = useState([]);
     const [newAmbulanceName, setNewAmbulanceName] = useState("");
-    const [newAmbulanceLatitude, setNewAmbulanceLatitude] = useState(0);
-    const [newAmbulanceLongitude, setNewAmbulanceLongitude] = useState(0);
     const [clientId, setClientId] = useState("");
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
@@ -50,8 +48,6 @@ const AmbulanceServiceA = () => {
                 "http://localhost:5000/Ambulance/add",
                 {
                     name: newAmbulanceName,
-                    latitude: newAmbulanceLatitude,
-                    longitude: newAmbulanceLongitude,
                 }
             );
             console.log(response);
@@ -73,6 +69,9 @@ const AmbulanceServiceA = () => {
                 setAlertMessage("Ambulance affected to hospital");
                 setAlertVariant("success");
                 setShowAlert(true);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
             } else {
                 setAlertMessage("Please select an ambulance and a hospital");
                 setAlertVariant("danger");
@@ -94,18 +93,6 @@ const AmbulanceServiceA = () => {
               placeholder="Ambulance Name"
               value={newAmbulanceName}
               onChange={(e) => setNewAmbulanceName(e.target.value)}
-            />
-            <input
-              type="number"
-              placeholder="Latitude"
-              value={newAmbulanceLatitude}
-              onChange={(e) => setNewAmbulanceLatitude(e.target.value)}
-            />
-            <input
-              type="number"
-              placeholder="Longitude"
-              value={newAmbulanceLongitude}
-              onChange={(e) => setNewAmbulanceLongitude(e.target.value)}
             />
             <button type="submit">Add Ambulance</button>
           </form>

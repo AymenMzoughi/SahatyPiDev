@@ -6,6 +6,9 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import ambulanceIcon from "./ambulance-icon.png";
 import ambulanceIcon2 from "./unavailable.png";
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
+
 const available = L.icon({
     iconUrl: ambulanceIcon,
     iconSize: [38, 38],
@@ -22,49 +25,39 @@ const unavailable = L.icon({
 
 const AmbulanceServiceP = () => {
     const [ambulances, setAmbulances] = useState([]);
-    const [newAmbulanceName, setNewAmbulanceName] = useState("");
-    const [newAmbulanceLatitude, setNewAmbulanceLatitude] = useState(0);
-    const [newAmbulanceLongitude, setNewAmbulanceLongitude] = useState(0);
-    const [clientId, setClientId] = useState("");
     const [showAlert, setShowAlert] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
     const [alertVariant, setAlertVariant] = useState("danger");
-    
+    const [showMapModal, setShowMapModal] = useState(false);
+    const [userId, setUserId] = useState("6410e2b6672845f92a8ecc2c");
     useEffect(() => {
         getAmbulances();
     }, []);
 
     const getAmbulances = async () => {
         try {
-            const response = await axios.get("http://localhost:5000/Ambulance");
+            let response = null;
+            // Fetch reserved ambulances for the given ID
+            const reservedResponse = await axios.get(`http://localhost:5000/Ambulance/reserved/${userId}`);
+            if (reservedResponse.data.ambulances && reservedResponse.data.ambulances.length > 0) {
+                // If reserved ambulances are available, set them to state and return
+                setAmbulances(reservedResponse.data.ambulances);
+                return;
+            }
+            // Fetch all ambulances (available and not available)
+            response = await axios.get("http://localhost:5000/Ambulance/");
             setAmbulances(response.data.ambulances);
         } catch (error) {
             console.error(error);
         }
     };
+    
 
-    const handleAddAmbulance = async (event) => {
-        event.preventDefault();
-        try {
-            const response = await axios.post(
-                "http://localhost:5000/Ambulance/add",
-                {
-                    name: newAmbulanceName,
-                    latitude: newAmbulanceLatitude,
-                    longitude: newAmbulanceLongitude,
-                }
-            );
-            console.log(response);
-            window.location.reload();
-        } catch (error) {
-            console.error(error);
-        }
-    };
 
     const reserve = async (ambulanceId) => {
         try {
             const response = await axios.post(
-                `http://localhost:5000/Ambulance/reserve/${clientId}/${ambulanceId}`
+                `http://localhost:5000/Ambulance/reserve/${userId}/${ambulanceId}`
             );
             setAmbulances(
                 ambulances.map((ambulance) => {
@@ -74,67 +67,36 @@ const AmbulanceServiceP = () => {
                     return ambulance;
                 })
             );
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const unreserve = async (ambulanceId) => {
- 
-        
-        try {
-            const ambulance = ambulances.find(
-                (ambulance) => ambulance._id === ambulanceId
-            );
-            
-            if (ambulance) {
-                if (ambulance.reservedBy && ambulance.createdAt) {
-                    const elapsed = Math.floor(
-                        (new Date() - new Date(ambulance.createdAt)) / 1000
-                    );
-                    console.log(elapsed)
-                    if (elapsed < 10) {
-                        const response = await axios.post(
-                            `http://localhost:5000/Ambulance/unreserve/${ambulanceId}`
-                        );
-                        setAmbulances(
-                            ambulances.map((amb) => {
-                                if (amb._id === response.data.ambulance._id) {
-                                    return {
-                                        ...response.data.ambulance,
-                                        reservedBy: null,
-                                        createdAt: null,
-                                        available: true,
-                                    };
-                                } else {
-                                    return amb;
-                                }
-                            })
-                        );
-                        setAlertMessage("Ambulance unreserved");
-                        setAlertVariant("success");
-                        setShowAlert(true);
-                    } else {
-                        setAlertMessage("This ambulance is reserved more than 10 seconds from now, unreserving is not possible. Ambulance is on its way to you.");
-                        setShowAlert(true);
-                    }
-                } else {
-                    setAlertMessage("This ambulance is not reserved");
-                    setShowAlert(true);
-                }
-            } else {
-                setAlertMessage("Ambulance not found");
-                setShowAlert(true);
-            }
+            window.location.reload();
         } catch (error) {
             console.error(error);
         }
     };
     
-
+    const unreserve = async (ambulanceId) => {
+        try {
+            const response = await axios.post(
+                `http://localhost:5000/Ambulance/unreserve/${userId}/${ambulanceId}`
+            );
+            setAmbulances(
+                ambulances.map((ambulance) => {
+                    if (ambulance._id === response.data.ambulance._id) {
+                        return response.data.ambulance;
+                    }
+                    return ambulance;
+                })
+            );
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+    
     const availableAmbulances = ambulances.filter(
-        (ambulance) => ambulance.available
-    );
+        (ambulance) => ambulance.available && !ambulance.reservedBy
+      );
+      
+    
 
     return (
         <div>
@@ -185,86 +147,90 @@ const AmbulanceServiceP = () => {
           {alertMessage}
         </Alert>
       )}
-            <div>
-                <h3>Add Ambulance</h3>
-                <form onSubmit={handleAddAmbulance}>
-                    <label htmlFor="new-ambulance-name">Name:</label>
-                    <input
-                        id="new-ambulance-name"
-                        type="text"
-                        value={newAmbulanceName}
-                        onChange={(event) =>
-                            setNewAmbulanceName(event.target.value)
-                        }
-                    />
-                    <label htmlFor="new-ambulance-latitude">Latitude:</label>
-                    <input
-                        id="new-ambulance-latitude"
-                        type="number"
-                        step="0.000001"
-                        value={newAmbulanceLatitude}
-                        onChange={(event) =>
-                            setNewAmbulanceLatitude(
-                                parseFloat(event.target.value)
-                            )
-                        }
-                    />
-                    <label htmlFor="new-ambulance-longitude">Longitude:</label>
-                    <input
-                        id="new-ambulance-longitude"
-                        type="number"
-                        step="0.000001"
-                        value={newAmbulanceLongitude}
-                        onChange={(event) =>
-                            setNewAmbulanceLongitude(
-                                parseFloat(event.target.value)
-                            )
-                        }
-                    />
-                    <button type="submit">Add Ambulance</button>
-                </form>
-            </div>
+            <Button onClick={() => setShowMapModal(true)}>Open Map</Button>
+            <Modal show={showMapModal} onHide={() => setShowMapModal(false)} className="custom-modal">
+            <Modal.Header closeButton>
+                <Modal.Title>Map</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <div className="map-container-wrapper">
+                {/* <MapContainer center={[33.7931605, 9.5607653]} zoom={8} style={{ height: "800px", width: "800px" }}>
 
-            <h3>Reserve Ambulance</h3>
-            <label htmlFor="clientId">Client Id:</label>
-            <input
-                type="text"
-                id="clientId"
-                value={clientId}
-                onChange={(e) => setClientId(e.target.value)}
-            />
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                {ambulances.map((ambulance) => (
+                    <Marker
+                    key={ambulance._id}
+                    position={[ambulance.latitude, ambulance.longitude]}
+                    icon={
+                        ambulance.available ? (
+                            available
+                        ) : (
+                        unavailable
+                        )
+                    }
+                    >
+                    <Popup>
+                        <div>
+                        <h4>{ambulance.name}</h4>
+                        <p>Latitude: {ambulance.latitude}</p>
+                        <p>Longitude: {ambulance.longitude}</p>
+                        {ambulance.available ? (
+                        <button onClick={() => reserve(ambulance._id)}>Reserve</button>
+                        ) : (
+                        <button onClick={() => unreserve(ambulance._id)}>Unreserve</button>
+                        )}
+                        </div>
+                    </Popup>
+                    </Marker>
+                ))}
+                 </MapContainer> */}
+                 <MapContainer center={[33.7931605, 9.5607653]} zoom={8} style={{ height: "800px", width: "800px" }}>
+                    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                    {ambulances.map((ambulance) => (
+                        <Marker
+                        key={ambulance._id}
+                        position={[ambulance.latitude, ambulance.longitude]}
+                        icon={ambulance.available ? available : unavailable}
+                        >
+                    <Popup>
+                                            <div>
+                                            <h4>{ambulance.name}</h4>
+                                            <p>Latitude: {ambulance.latitude}</p>
+                                            <p>Longitude: {ambulance.longitude}</p>
+                                            {ambulance.available ? (
+                                            <button onClick={() => reserve(ambulance._id)}>Reserve</button>
+                                            ) : (
+                                            <button onClick={() => unreserve(ambulance._id)}>Unreserve</button>
+                                            )}
+                                            </div>
+                                        </Popup>
+                        </Marker>
+                    ))}
+                    </MapContainer>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowMapModal(false)}>
+                    Close
+                    </Button>
+                </Modal.Footer>
+                </Modal>
 
-            <h3>Map of Available Ambulances:</h3>
-            <div style={{ height: "500px", width: "100%" }}>
-            <MapContainer center={[33.7931605, 9.5607653]} zoom={8} style={{ height: "800px", width: "800px"}}>
-  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-  {ambulances.map((ambulance) => (
-    <Marker
-      key={ambulance._id}
-      position={[ambulance.latitude, ambulance.longitude]}
-      icon={
-        ambulance.available ? (
-            available
-        ) : (
-          unavailable
-        )
-      }
-    >
-      <Popup>
-        <div>
-          <h4>{ambulance.name}</h4>
-          <p>Latitude: {ambulance.latitude}</p>
-          <p>Longitude: {ambulance.longitude}</p>
-          <button onClick={() => reserve(ambulance._id)}>Reserve</button>
-          <button onClick={() => unreserve(ambulance._id)}>Unreserve</button>
+                <style>
+                {`
+                    .custom-modal .modal-dialog {
+                    max-width: 45%;
+                    height: auto;
+                    margin: 50;
+                    }
+
+                    .map-container-wrapper {
+                    height: 100%;
+                    width: 100%;
+                    }
+                `}
+                </style>
         </div>
-      </Popup>
-    </Marker>
-  ))}
-</MapContainer>
-            </div>
-        </div>
-    );
-};
-
+    )
+                };
 export default AmbulanceServiceP;

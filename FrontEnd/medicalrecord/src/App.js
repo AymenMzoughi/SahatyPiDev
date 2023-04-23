@@ -19,7 +19,7 @@ function App() {
      {/* <AddMedicalRecordForm onSubmit={handleFormSubmit}/> */}
     {/* <MedicalRecordsD/>   */}
     
-    <AmbulanceServiceA/> 
+    <AmbulanceServiceP/> 
 
     {/* <MyComponent/> */}
     {/* <HospitalComponent/> */}

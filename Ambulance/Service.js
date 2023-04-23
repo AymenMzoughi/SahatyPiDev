@@ -69,6 +69,25 @@ const getAmbulances = async (req, res, next) => {
     }
   };
 
+  const getAmbulancesReserved = async (req, res, next) => {
+    try {
+        const { clientId } = req.params;
+
+        // Convert clientId to ObjectId instance
+        const clientIdObjId = new mongoose.Types.ObjectId(clientId);
+
+        const ambulances = await Ambulance.find({ reservedBy: clientIdObjId });
+
+        res.status(200).json({ ambulances });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+
+  
+
 // Add an ambulance
 const addAmbulance = async (req, res, next) => {
     try {
@@ -112,25 +131,31 @@ const reserveAmbulance = async (req, res, next) => {
 
   const unreserveAmbulance = async (req, res, next) => {
     try {
-      const { ambulanceId } = req.params;
+      const { ambulanceId, clientId } = req.params;
       const ambulance = await Ambulance.findById(ambulanceId);
       if (!ambulance) {
         return res.status(404).json({ message: 'Ambulance not found' });
       }
-  
-      const reservedBy = ambulance.reservedBy;
+ 
+      const reservedBy = ambulance.reservedBy._id.toJSON();
       const createdAt = ambulance.createdAt;
-  
-      // Vérifier si la réservation a été faite depuis plus de 10 secondes
-      const now = new Date();
-      const elapsed = now.getTime() - createdAt.getTime();
-      if (elapsed > 10000) {
-        logger.error(`Patient tried to unreserve ambulance, 10 sec passed`, {
-          timestamp: new Date().toISOString(),});
-        return res.status(400).json({ message: 'Annulation impossible, 10 seconde sont déjà passé.' });
+
+      // Check if clientId matches reservedBy
+      if (clientId !== reservedBy) {
+        return res.status(400).json({ message: "You can't unreserve this ambulance since you didn't reserve it" });
       }
   
-      // Réinitialiser les champs
+      // Check if reservation was made more than 10 seconds ago
+      const now = new Date();
+      const elapsed = now.getTime() - createdAt.getTime();
+      if (elapsed > 100000000) {
+        logger.error(`Patient tried to unreserve ambulance, 10 seconds passed`, {
+          timestamp: new Date().toISOString(),
+        });
+        return res.status(400).json({ message: 'Annulation impossible, 10 seconds have already passed.' });
+      }
+  
+      // Reset ambulance fields
       ambulance.reservedBy = null;
       ambulance.createdAt = null;
       ambulance.available = true;
@@ -138,16 +163,17 @@ const reserveAmbulance = async (req, res, next) => {
       ambulance.longitudeUser = null;
   
       await ambulance.save();
-      res.status(200).json({ ambulance });
       logger.info(`Patient ${clientId} unreserved ambulance ${ambulanceId}`, {
-        timestamp: new Date().toISOString(),});
+        timestamp: new Date().toISOString(),
+      });
+      return res.status(200).json({ ambulance });
     } catch (err) {
-      logger.error(`Patient failed to unreserve ambulance`, { error: err.message, req,
-        timestamp: new Date().toISOString(),});
+      logger.error(`Patient failed to unreserve ambulance`, { error: err.message, req, timestamp: new Date().toISOString() });
       console.error(err);
-      res.status(500).json({ message: 'Server error' });
+      return res.status(500).json({ message: 'Server error' });
     }
   };
+
   
   const assignAmbulanceToHospital = async (req, res) => {
     try {
@@ -206,6 +232,7 @@ const reserveAmbulance = async (req, res, next) => {
 
   module.exports = {
     getAmbulances,
+    getAmbulancesReserved,
     addAmbulance,
     reserveAmbulance,
     unreserveAmbulance,
