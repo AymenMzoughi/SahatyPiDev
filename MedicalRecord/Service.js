@@ -52,8 +52,8 @@ const logger = winston.createLogger({
     })({ req: null }),
   ),
   transports: [
-    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'logs/combined.log', level: 'info' }),
+    new winston.transports.File({ filename: 'logs/MedicalRecords/error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'logs/MedicalRecords/combined.log', level: 'info' , levelOnly: true }),
     new winston.transports.MongoDB({
       level: 'info',
       db: mongoose.connection,
@@ -61,12 +61,13 @@ const logger = winston.createLogger({
       collection: 'medical_logs',
       metaKey: 'meta',
       transformer: (log) => {
-        const { patientId, doctorId, medicalRecordId } = log.meta || {};
+        const { patientId, doctorId, medicalRecordId, sysdate } = log.meta || {};
         return {
           ...log,
           doctorId,
           medicalRecordId,
           patientId,
+          sysdate,
         };
       },
     }),
