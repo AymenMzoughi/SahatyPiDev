@@ -8,6 +8,7 @@ import ambulanceIcon from "./ambulance-icon.png";
 import ambulanceIcon2 from "./unavailable.png";
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import io from 'socket.io-client'; // Import socket.io-client library
 
 const available = L.icon({
     iconUrl: ambulanceIcon,
@@ -30,9 +31,13 @@ const AmbulanceServiceP = () => {
     const [alertVariant, setAlertVariant] = useState("danger");
     const [showMapModal, setShowMapModal] = useState(false);
     const [userId, setUserId] = useState("6410e2b6672845f92a8ecc2c");
+    const [socket, setSocket] = useState(null); // State for socket
     useEffect(() => {
         getAmbulances();
+        
     }, []);
+
+  
 
     const getAmbulances = async () => {
         try {
@@ -68,9 +73,13 @@ const AmbulanceServiceP = () => {
                 })
             );
             window.location.reload();
+    
+        
+    
         } catch (error) {
             console.error(error);
         }
+
     };
     
     const unreserve = async (ambulanceId) => {
@@ -87,6 +96,8 @@ const AmbulanceServiceP = () => {
                 })
             );
             window.location.reload();
+            
+        
         } catch (error) {
             console.error(error);
         }

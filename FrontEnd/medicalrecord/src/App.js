@@ -9,6 +9,7 @@ import AmbulanceServiceP from './components/ambulancePatient';
 import AmbulanceServiceA from './components/ambulanceAdmin';
 import MyComponent from './components/test';
 import HospitalComponent from './components/hospital';
+import AmbulanceTrackingComponent from './components/track';
 function App() {
   const handleFormSubmit = (formData) => {
     // Do something with the form data
@@ -19,7 +20,7 @@ function App() {
      {/* <AddMedicalRecordForm onSubmit={handleFormSubmit}/> */}
     {/* <MedicalRecordsD/>   */}
     
-    <AmbulanceServiceP/> 
+    <AmbulanceTrackingComponent/> 
 
     {/* <MyComponent/> */}
     {/* <HospitalComponent/> */}

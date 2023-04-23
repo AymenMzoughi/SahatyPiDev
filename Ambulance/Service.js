@@ -4,7 +4,12 @@ const Ambulance = require('./Models')
 const axios = require('axios');
 const Hospital = require('../Hospital/Models')
 const winston = require('winston');
+const http = require('http');
+const socketIO = require('socket.io');
 const mongoose = require('mongoose');
+const app = express();
+const server = http.createServer(app);
+const io = socketIO(server);
 
 
 const logger = winston.createLogger({
@@ -58,6 +63,87 @@ const logger = winston.createLogger({
   ],
 });
 
+const track = async()=>{
+// Socket.IO logic for ambulance tracking
+io.on('connection', (socket) => {
+  console.log('Client connected:', socket.id);
+
+  // Emit ambulance location to the client
+  socket.on('getAmbulanceLocation', async (ambulanceId) => {
+    try {
+      // Find the ambulance by ID
+      const ambulance = await Ambulance.findById(ambulanceId);
+      if (ambulance) {
+        const { name, latitude, longitude } = ambulance;
+        // Emit the ambulance location to the client
+        io.to(socket.id).emit('ambulanceLocation', { name, latitude, longitude });
+      } else {
+        // Ambulance not found
+        io.to(socket.id).emit('ambulanceNotFound', { message: 'Ambulance not found' });
+      }
+    } catch (err) {
+      // Error occurred while fetching ambulance location
+      console.error(err);
+      io.to(socket.id).emit('error', { message: 'Error occurred while fetching ambulance location' });
+    }
+  });
+
+  // Emit ambulance location updates to the client
+  socket.on('startAmbulanceTracking', async ({ ambulanceId, latitudeUser, longitudeUser }) => {
+    try {
+      // Find the ambulance by ID
+      const ambulance = await Ambulance.findById(ambulanceId);
+      if (ambulance) {
+        // Update the ambulance location every 5 seconds and emit to the client
+        const updateInterval = setInterval(async () => {
+          // Update the ambulance location based on the destination
+          // Calculate the distance and direction to the user's destination
+          const distance = calculateDistance(ambulance.latitude, ambulance.longitude, latitudeUser, longitudeUser);
+          const direction = calculateDirection(ambulance.latitude, ambulance.longitude, latitudeUser, longitudeUser);
+
+          // Update the ambulance's latitude and longitude based on the direction and distance
+          const step = 0.001; // Define a step size for movement
+          ambulance.latitude += step * Math.cos(direction);
+          ambulance.longitude += step * Math.sin(direction);
+          await ambulance.save();
+
+          const { name, latitude, longitude } = ambulance;
+          // Emit the ambulance location to the client
+          io.to(socket.id).emit('ambulanceLocation', { name, latitude, longitude });
+
+          // Check if ambulance has reached the destination within a certain threshold distance
+          const thresholdDistance = 0.01; // Define a threshold distance for destination reached
+          if (calculateDistance(ambulance.latitude, ambulance.longitude, latitudeUser, longitudeUser) <= thresholdDistance) {
+            clearInterval(updateInterval);
+            // Emit destination reached event to the client
+            io.to(socket.id).emit('destinationReached', { message: 'Destination reached' });
+          }
+        }, 5000); // Update every 5 seconds
+
+      } else {
+        // Ambulance not found
+        io.to(socket.id).emit('ambulanceNotFound', { message: 'Ambulance not found' });
+      }
+    } catch (err) {
+      // Error occurred while updating ambulance location
+      console.error(err);
+      io.to(socket.id).emit('error', { message: 'Error occurred while updating ambulance location' });
+    }
+  });
+
+  // Disconnect event
+  socket.on('disconnect', () => {
+    console.log('Client disconnected:', socket.id);
+  });
+});
+
+function calculateDirection(lat1, lon1, lat2, lon2) {
+  const y = Math.sin(lon2 - lon1) * Math.cos(lat2);
+  const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1);
+  return Math.atan2(y, x);
+}
+
+}
   // Get all ambulances
 const getAmbulances = async (req, res, next) => {
     try {
@@ -224,13 +310,10 @@ const reserveAmbulance = async (req, res, next) => {
       res.status(500).json({ success: false, message: err.message });
     }
   };
-  
-  
-  
-  
-  
+
 
   module.exports = {
+    track,
     getAmbulances,
     getAmbulancesReserved,
     addAmbulance,
