@@ -17,6 +17,7 @@ const nodemailer = require('nodemailer');
 // });
 
 const nexmo = require('nexmo');
+const { Console } = require('console');
 const nexmoClient = new nexmo({
   apiKey: '1cfff73c',
   apiSecret: 'pIV2CDT582lZhx9N',
@@ -83,148 +84,41 @@ const sendMail = async (to, subject, html) => {
   await transporter.sendMail(mailOptions);
 };
 
-// const addMedicalRecord = async (req, res, next) => {
-//   try {
-//     const { patientId, doctorId, imageType } = req.body;
-//     const images = req.files;
 
-//     // Check if the medical record already exists
-//     let existingMedicalRecord = await MedicalRecord.findOne({ patientId });
-//     if (!existingMedicalRecord) {
-//       // Create a new medical record if it doesn't exist
-//       existingMedicalRecord = new MedicalRecord({ patientId, doctorId });
-//       await existingMedicalRecord.save();
-//       logger.info('Created new medical record', {
-//         timestamp: new Date().toISOString(),
-//       });
-//     } else {
-//       // Update the doctor id of the existing medical record
-//       existingMedicalRecord.doctorId = doctorId;
-//       await existingMedicalRecord.save();
-//       logger.info('Updated existing medical record', {
-//         timestamp: new Date().toISOString(),
-//       });
-//     }
-
-//     // Create an array of new medical images to be added
-//     const newMedicalImages = images.map((image) => ({
-//       doctorId,
-//       medicalRecordId: existingMedicalRecord._id,
-//       imageUrl: image.path,
-//       imageName: image.filename,
-//       imageType: imageType,
-//     }));
-
-//     logger.info(`Adding ${newMedicalImages.length} new medical images`, {
-//       timestamp: new Date().toISOString(),
-//     });
-
-//     // Insert the new medical images
-//     const savedMedicalImages = await MedicalImage.insertMany(newMedicalImages);
-
-//     // Add the new medical images to the existing medical record
-//     existingMedicalRecord.medicalImages.push(
-//       ...savedMedicalImages.map((image) => image._id)
-//     );
-//     await existingMedicalRecord.save();
-
-//     const user = await UserModel.findOne({ _id: patientId }).select('mail numero lastname firstname');
-
-//     // Send email notification
-//     const subject = 'New Medical Record Added';
-//     const html = `
-//       <html>
-//         <body>
-//         <center><img src="https://i.imgur.com/nIyZjOx.png" width="128" height="128"></center>
-//         <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:28px;color:#0a4898;font-size:14px;text-align:center">
-//         <em>Dear ${user.lastname} ${user.firstname},</em><br />
-//       </p>
-//       <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:28px;color:#0a4898;font-size:14px;text-align:center">
-//         <em>We are pleased to inform you that your medical record number ${existingMedicalRecord._id} has been updated.</em>
-//       </p>
-//       <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:28px;color:#0a4898;font-size:14px;text-align:center">
-//         <em>Our team has reviewed and approved the record, which contains ${newMedicalImages.length} new files in ${imageType} type.</em>
-//       </p>
-//       <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:28px;color:#0a4898;font-size:14px;text-align:center">
-//         <em>Please login to your account to view more details</em>
-//       </p>
-//       <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:28px;color:#0a4898;font-size:14px;text-align:center">
-//         <em>Thank you for choosing our services.</em>
-//       </p>
-//       <p style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:28px;color:#0a4898;font-size:14px;text-align:center">
-//         <em>Sincerely, Sehaty Team</em>
-//       </p>
-//         </body>
-//       </html>
-//     `;
-//     await sendMail(user.mail, subject, html);
-
-//     // Send SMS notification
-//     const message = await nexmoClient.message.sendSms(
-//       'Vonage APIs', // Replace with the Nexmo virtual number you purchased
-//       21655736345,
-//       `Dear ${user.lastname} ${user.firstname}, We are pleased to inform you that your medical record number ${existingMedicalRecord._id} has been updated. Our team has reviewed and approved the record, which contains ${newMedicalImages.length} new files in medical letter type. Please login to your account to view more details. Thank you for choosing our services.
-//       Sincerely, Sehaty Team`,
-//       { type: 'unicode' },
-//       (err, responseData) => {
-//         if (err) {
-//           logger.error('Error sending SMS', { error: err });
-//           return;
-//         }
-//         logger.info('SMS sent successfully', { responseData });
-//       }
-//     );
-    
-
-//     res.json({
-//       medicalRecord: existingMedicalRecord,
-//       medicalImages: savedMedicalImages,
-//     });
-//   } catch (err) {
-//     logger.error(err, {
-//       timestamp: new Date().toISOString(),
-     
-//     });
-//     res.status(500).send('Internal Server Error');
-//   }
-// };
-
-
-  // Add function for Medical Image
-const addMedicalImage = async (doctorId, medicalRecordId, imageUrl, imageType, imageName) => {
+ // Add function for Medical Image
+ const addMedicalImage = async (doctorId, medicalRecordId, image, imageType, imageName) => {
   try {
   const medicalImage = new MedicalImage({
-    doctorId,
-    medicalRecordId,
-    imageUrl,
-    imageType,
-    imageName,
+  doctorId,
+  medicalRecordId,
+  imageUrl: image,
+  imageType,
+  imageName,
   });
   await medicalImage.save();
   logger.info('Medical Image added successfully', {
-    timestamp: new Date().toISOString(),
-    doctorId,
-    medicalRecordId,
-    imageUrl,
-    imageType,
-    imageName,
+  timestamp: new Date().toISOString(),
+  doctorId,
+  medicalRecordId,
+  imageUrl: path,
+  imageType,
+  imageName,
   });
   return medicalImage;
-} catch (error) {
+  } catch (error) {
   // Log error
   logger.error('Failed to add Medical Image', {
-    timestamp: new Date().toISOString(),
-    doctorId,
-    medicalRecordId,
-    imageUrl,
-    imageType,
-    imageName,
-    error: error.message,
+  timestamp: new Date().toISOString(),
+  doctorId,
+  medicalRecordId,
+  imageUrl: image,
+  imageType,
+  imageName,
+  error: error.message,
   });
   throw error;
-}
-  
-};
+  }
+  };
 
 // Add function for Medication
 const addMedication = async (doctorId,medicalRecordId, name, dosage, frequency) => {
@@ -338,8 +232,14 @@ const addAllergy = async (doctorId,medicalRecordId, name, severity, reaction) =>
 // Add function for Medical Record
 const addMedicalRecord = async (req, res, next) => {
   try {
-    const { patientId, doctorId } = req.body;
+    const { patientId, doctorId, imageType,medications,treatments,allergies} = req.body;
+    const images = req.files;
 
+    const parsedMedications = JSON.parse(medications);
+    const parsedTreatments = JSON.parse(treatments);
+    const parsedAllegries = JSON.parse(allergies);
+
+    
     // Check if the doctorId refers to a user with role doctor/admin
     const doctor = await UserModel.findOne({ _id: doctorId, $or: [{ role: 'Docteur' }, { role: 'admin' }] });
     if (!doctor) {
@@ -369,47 +269,54 @@ const addMedicalRecord = async (req, res, next) => {
     }
 
     // Call add functions for other models
-    if (req.body.medications) {
-      const medications = req.body.medications;
-      const medicationPromises = medications.map(medication =>
-        addMedication(doctorId,existingMedicalRecord._id, medication.name, medication.dosage, medication.frequency)
+    if (Array.isArray(parsedMedications)) {
+      const medicationPromises = parsedMedications.map(medication =>
+        addMedication(doctorId, existingMedicalRecord._id, medication.name, medication.dosage, medication.frequency)
       );
       const savedMedications = await Promise.all(medicationPromises);
       existingMedicalRecord.medications.push(...savedMedications.map(medication => medication._id));
+      console.log('Medication',savedMedications)
     }
 
-    if (req.body.treatments) {
-      const treatments = req.body.treatments;
-      const treatmentPromises = treatments.map(treatment =>
-        addTreatment(doctorId, existingMedicalRecord._id,treatment.name, treatment.description, treatment.startDate, treatment.endDate)
+    if (Array.isArray(parsedTreatments)) {
+      const treatmentPromises = parsedTreatments.map(treatment =>
+        addTreatment(doctorId, existingMedicalRecord._id, treatment.name, treatment.description, treatment.startDate,treatment.endDate)
       );
       const savedTreatments = await Promise.all(treatmentPromises);
       existingMedicalRecord.treatments.push(...savedTreatments.map(treatment => treatment._id));
+      console.log('Treatement',savedTreatments)
     }
 
-    if (req.body.allergies) {
-      const allergies = req.body.allergies;
-      const allergyPromises = allergies.map(allergy =>
+    if (Array.isArray(parsedAllegries)) {
+      const allergyPromises = parsedAllegries.map(allergy =>
         addAllergy(doctorId, existingMedicalRecord._id,allergy.name, allergy.severity, allergy.reaction)
       );
       const savedAllergies = await Promise.all(allergyPromises);
       existingMedicalRecord.allergies.push(...savedAllergies.map(allergy => allergy._id));
+      console.log('Allergies',savedAllergies)
     }
 
-    if (req.body.medicalImages) {
-      const medicalImages = req.body.medicalImages;
-      const medicalImagePromises = medicalImages.map(medicalImage =>
-        addMedicalImage(doctorId, existingMedicalRecord._id, medicalImage.imageUrl, medicalImage.imageType, medicalImage.imageName)
-      );
+    console.log(images)
+    if (images && images.length > 0) {
+      const medicalImagePromises = images.map(async (medicalImage) => {
+        const filename = medicalImage.filename;
+        const path = medicalImage.path;
+        console.log(req.body.imageType);
+        const savedMedicalImage = await addMedicalImage(doctorId, existingMedicalRecord._id, path, req.body.imageType, filename);
+        return savedMedicalImage;
+      });
+    
       const savedMedicalImages = await Promise.all(medicalImagePromises);
       existingMedicalRecord.medicalImages.push(...savedMedicalImages.map(medicalImage => medicalImage._id));
     }
+    
+   
 
     await existingMedicalRecord.save();
     
         const user = await UserModel.findOne({ _id: patientId }).select('mail numero lastname firstname');
         const doctorName = await UserModel.findOne({ _id: doctorId }).select('lastname firstname');
-        console.log(req.body.medicalImages.map(medicalImage => medicalImage.imageType))
+        
  // Send email notification
     const subject = 'New Medical Record Added';
     const html = `
@@ -424,10 +331,10 @@ const addMedicalRecord = async (req, res, next) => {
         <p style="margin: 0; -webkit-text-size-adjust: none; -ms-text-size-adjust: none; mso-line-height-rule: exactly; font-family: arial, 'helvetica neue', helvetica, sans-serif; line-height: 28px; color: #0a4898; font-size: 14px; text-align: left;">&nbsp;</p>
         <p style="margin: 0; -webkit-text-size-adjust: none; -ms-text-size-adjust: none; mso-line-height-rule: exactly; font-family: arial, 'helvetica neue', helvetica, sans-serif; line-height: 28px; color: #0a4898; font-size: 14px; text-align: left;"><span style="color: #000000;"><em>For this our team has reviewed and found this list of updates:</em></span></p>
         <ul style="list-style-type: circle;">
-        <li><span style="color: #000000;"><em>Files: 1 image of type ${req.body.medicalImages.map(medicalImage => medicalImage.imageType) || 'N/A'} </em></span></li>
-        <li><span style="color: #000000;"><em>Allergies: ${req.body.allergies.map(allergy => allergy.name).join(', ') || 'N/A'}</em></span></li>
-        <li><span style="color: #000000;"><em>Treatments: ${req.body.treatments.map(treatment => treatment.name).join(', ') || 'N/A'}</em></span></li>
-        <li><span style="color: #000000;"><em>Medications: ${req.body.medications.map(medication => medication.name).join(', ') || 'N/A'}</em></span></li>
+        <li><span style="color: #000000;"><em>Files: 1 image of type ${req.body.imageType || 'N/A'} </em></span></li>
+        <li><span style="color: #000000;"><em>Medication: ${parsedMedications.length || 'N/A'} </em></span></li>
+         <li><span style="color: #000000;"><em>Treatment: ${parsedTreatments.length || 'N/A'} </em></span></li>
+         <li><span style="color: #000000;"><em>Allergies: ${parsedAllegries.length || 'N/A'} </em></span></li>
         </ul>
         <p style="margin: 0; -webkit-text-size-adjust: none; -ms-text-size-adjust: none; mso-line-height-rule: exactly; font-family: arial, 'helvetica neue', helvetica, sans-serif; line-height: 28px; color: #0a4898; font-size: 14px; text-align: left;"><span style="color: #000000;"><em>Please login to your account to view more details about your medical record</em></span></p>
         <p style="margin: 0; -webkit-text-size-adjust: none; -ms-text-size-adjust: none; mso-line-height-rule: exactly; font-family: arial, 'helvetica neue', helvetica, sans-serif; line-height: 28px; color: #0a4898; font-size: 14px; text-align: left;"><span style="color: #000000;"><em>Thank you for choosing our services.</em></span></p>
@@ -461,12 +368,12 @@ const addMedicalRecord = async (req, res, next) => {
     });
   } catch (err) {
     logger.error(err, {
+      message:(err),
       timestamp: new Date().toISOString(),
     });
     res.status(500).send('Internal Server Error');
   }
 };
-
 
 
 const deleteMedicalRecord = async (req, res, next) => {
@@ -558,7 +465,7 @@ const deleteAllergyFromMedicalRecord = async (req, res, next) => {
 
     await allergy.delete();
 
-    logger.info('Medical image deleted successfully', {
+    logger.info('Allergy deleted successfully', {
       timestamp: new Date().toISOString(),
       doctorId,
       allergyId,
@@ -680,37 +587,6 @@ const deleteTreatmentFromMedicalRecord = async (req, res, next) => {
       };
       
 
-      const downloadFile = async (req, res, next) => {
-        try {
-          const filePath = req.params.filePath; // get file path from request params
-          const fullPath = path.join(__dirname, filePath); // create full path to file
-          const fileExists = fs.existsSync(fullPath); // check if file exists
-      
-          if (fileExists) {
-            // set response headers
-            res.setHeader('Content-Disposition', `attachment; filename=${path.basename(fullPath)}`);
-            res.setHeader('Content-Type', 'application/octet-stream');
-            res.setHeader('Content-Length', fs.statSync(fullPath).size);
-      
-            // create read stream and pipe it to the response
-            const readStream = fs.createReadStream(fullPath);
-            readStream.pipe(res);
-      
-            logger.info('File downloaded successfully', {
-              timestamp: new Date().toISOString(),
-              filePath,
-            });
-          } else {
-            // return 404 if file does not exist
-            res.status(404).send('File not found');
-          }
-        } catch (err) {
-          logger.error(err, {
-            timestamp: new Date().toISOString(),
-          });
-          res.status(500).send('Internal Server Error');
-        }
-      };
 
       const getMedicalRecordByPatientId = async (req, res, next) => {
         try {
@@ -719,12 +595,25 @@ const deleteTreatmentFromMedicalRecord = async (req, res, next) => {
           const medicalRecord = await MedicalRecord.findOne({ patientId })
             .populate({
               path: 'medicalImages',
-              select: 'imageUrl imageType imageName createdAt updatedAt -_id',
+              select: '',
               options: { sort: { imageType: 1 } }
             })
             .select('-_id ')
             .populate('patientId', 'firstname lastname')
-            .lean();
+            .populate({
+              path:'medications',
+              select: '',
+            })
+            .populate({
+              path:'treatments',
+              select: '',
+            })
+            .populate({
+              path:'allergies',
+              select: '',
+            })
+            .lean()
+            .exec(); // Add the .exec() method at the end of the query chain
       
           if (!medicalRecord) {
             return res.status(404).json({ message: 'Medical record not found' });
@@ -734,27 +623,25 @@ const deleteTreatmentFromMedicalRecord = async (req, res, next) => {
             patientName: `${medicalRecord.patientId.firstname} ${medicalRecord.patientId.lastname}`,
             createdAt: medicalRecord.createdAt,
             updatedAt: medicalRecord.updatedAt,
-            medicalImages: medicalRecord.medicalImages
+            medicalImages: medicalRecord.medicalImages,
+            medications: medicalRecord.medications,
+            treatments: medicalRecord.treatments,
+            allergies: medicalRecord.allergies
           });
       
         } catch (err) {
-          res.status(500).send('Internal Server Error');
+          res.status(500).send(err);
         }
       };
       
-      
-      
-      
-      
-      
+
     
 
   module.exports = { addMedicalRecord, 
     deleteMedicalRecord, 
     deleteImageFromMedicalRecord, 
     getAllMedicalRecords, 
-    downloadFile, 
     getMedicalRecordByPatientId,
     deleteAllergyFromMedicalRecord,
     deleteMedicationFromMedicalRecord,
-    deleteTreatmentFromMedicalRecord};
+    deleteTreatmentFromMedicalRecord,};

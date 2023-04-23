@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const medicalImageSchema = new Schema({
-  doctorId: { type: Schema.Types.ObjectId, ref: 'user', required: true},
-  medicalRecordId: { type: Schema.Types.ObjectId, ref: 'MedicalRecord', required: true },
-  imageUrl: { type: String, required: true },
-  imageType: { type: String, enum: ['x-ray', 'prescription', 'medical letter'], required: true },
+  doctorId: { type: Schema.Types.ObjectId, ref: 'user'},
+  medicalRecordId: { type: Schema.Types.ObjectId, ref: 'MedicalRecord' },
+  imageUrl: { type: String },
+  imageType: { type: String, enum: ['x-ray', 'prescription', 'medical letter'] },
   imageName: { type: String },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
@@ -15,28 +15,34 @@ const medicalImageSchema = new Schema({
 });
 
 const medicationSchema = new Schema({
-  doctorId: { type: Schema.Types.ObjectId, ref: 'user', required: true },
-  medicalRecordId: { type: Schema.Types.ObjectId, ref: 'MedicalRecord', required: true },
-  name: { type: String, required: true },
-  dosage: { type: String, required: true },
-  frequency: { type: String, required: true },
+  doctorId: { type: Schema.Types.ObjectId, ref: 'user' },
+  medicalRecordId: { type: Schema.Types.ObjectId, ref: 'MedicalRecord' },
+  name: { type: String },
+  dosage: { type: String },
+  frequency: { type: String },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 });
 
 const treatmentSchema = new Schema({
-  doctorId: { type: Schema.Types.ObjectId, ref: 'user', required: true },
-  medicalRecordId: { type: Schema.Types.ObjectId, ref: 'MedicalRecord', required: true },
-  name: { type: String, required: true },
-  description: { type: String, required: true },
-  startDate: { type: Date, required: true },
+  doctorId: { type: Schema.Types.ObjectId, ref: 'user' },
+  medicalRecordId: { type: Schema.Types.ObjectId, ref: 'MedicalRecord' },
+  name: { type: String },
+  description: { type: String },
+  startDate: { type: Date },
   endDate: { type: Date },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 });
 
 const allergySchema = new Schema({
-  doctorId: { type: Schema.Types.ObjectId, ref: 'user', required: true },
-  medicalRecordId: { type: Schema.Types.ObjectId, ref: 'MedicalRecord', required: true },
-  name: { type: String, required: true },
-  severity: { type: String, enum: ['mild', 'moderate', 'severe'], required: true },
-  reaction: { type: String, required: true },
+  doctorId: { type: Schema.Types.ObjectId, ref: 'user'},
+  medicalRecordId: { type: Schema.Types.ObjectId, ref: 'MedicalRecord' },
+  name: { type: String},
+  severity: { type: String, enum: ['mild', 'moderate', 'severe']},
+  reaction: { type: String },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 });
 
 const medicalRecordSchema = new Schema({

@@ -1,7 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import AddMedicalRecordForm from './components/addMedicalRecordForm';
-import MedicalRecords from './components/showMedicalRecord';
+import MedicalRecords from './components/showMedicalRecordPatient';
+import MedicalRecordsD  from './components/showMedicalRecordDoctor';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import AmbulanceSystem from './components/ambulance';
@@ -14,11 +15,11 @@ function App() {
   return (
     <div>
      <AddMedicalRecordForm onSubmit={handleFormSubmit}/>
-    <MedicalRecords/>  
+    <MedicalRecordsD/>  
     
-    <AmbulanceSystem/> 
+    {/* <AmbulanceSystem/>  */}
 
-    <MyComponent/>
+    {/* <MyComponent/> */}
     
   </div>
   );

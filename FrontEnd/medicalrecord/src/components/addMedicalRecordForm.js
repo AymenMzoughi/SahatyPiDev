@@ -6,7 +6,9 @@ const AddMedicalRecordForm = () => {
   const [doctorId, setDoctorId] = useState('');
   const [images, setImages] = useState([]);
   const [imageType, setImageType] = useState('');
-
+  const [medications, setMedications] = useState([]);
+  const [treatments, setTreatments] = useState([]);
+  const [allergies, setAllergies] = useState([]);
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -14,6 +16,9 @@ const AddMedicalRecordForm = () => {
       formData.append('patientId', patientId);
       formData.append('doctorId', doctorId);
       formData.append('imageType', imageType);
+      formData.append('medications', JSON.stringify(medications)); // Convert medications array to string before appending
+      formData.append('treatments', JSON.stringify(treatments));
+      formData.append('allergies', JSON.stringify(allergies));
       for (let i = 0; i < images.length; i++) {
         formData.append('images', images[i].imageFile);
       }
@@ -23,11 +28,64 @@ const AddMedicalRecordForm = () => {
         }
       });
       console.log(response.data);
-      window.location.reload();
+      
+      console.log('hhh',medications)
+      
     } catch (error) {
       console.error(error);
     }
     console.log('Image type:', imageType);
+  };
+  
+  const handleAddTreatments = () => {
+    setTreatments([...treatments, { name: '', description: '', startDate: '', endDate:'' }]);
+  };
+
+  const handleAddMedication = () => {
+    setMedications([...medications, { name: '', dosage: '', frequency: '' }]);
+  };
+  
+  const handleAddAllergies = () => {
+    setAllergies([...allergies, { name: '', severity: '', reaction: '' }]);
+  };
+
+  const handleMedicationChange = (e, index) => {
+    const { name, value } = e.target;
+    const updatedMedications = [...medications];
+    updatedMedications[index][name] = value;
+    setMedications(updatedMedications);
+  };
+
+  const handleTreatmentChange = (e, index) => {
+    const { name, value } = e.target;
+    const updatedTreatments = [...treatments];
+    updatedTreatments[index][name] = value;
+    setTreatments(updatedTreatments);
+  };
+
+  const handleAllergiesChange = (e, index) => {
+    const { name, value } = e.target;
+    const updatedAllergies = [...allergies];
+    updatedAllergies[index][name] = value;
+    setAllergies(updatedAllergies);
+  };
+
+  const handleRemoveMedication = (index) => {
+    const updatedMedications = [...medications];
+    updatedMedications.splice(index, 1);
+    setMedications(updatedMedications);
+  };
+
+  const handleRemoveTreatment = (index) => {
+    const updatedTreatments = [...treatments];
+    updatedTreatments.splice(index, 1);
+    setTreatments(updatedTreatments);
+  };
+
+  const handleRemoveAllergies = (index) => {
+    const updatedAllergies = [...allergies];
+    updatedAllergies.splice(index, 1);
+    setAllergies(updatedAllergies);
   };
 
   const handleImageChange = (event) => {
@@ -46,6 +104,7 @@ const AddMedicalRecordForm = () => {
   const handleImageTypeChange = (event) => {
     setImageType(event.target.value);
   }
+
 
   return (
     <div className="container mt-4">
@@ -98,6 +157,113 @@ const AddMedicalRecordForm = () => {
             onChange={handleImageChange}
           />
         </div>
+
+        <h1>Medications</h1>
+        {medications.map((medication, index) => (
+          <div key={index}>
+            <input
+              type="text"
+              name="name"
+              placeholder="Medication Name"
+              value={medication.name}
+              onChange={(e) => handleMedicationChange(e, index)}
+            />
+            <input
+              type="text"
+              name="dosage"
+              placeholder="Dosage"
+              value={medication.dosage}
+              onChange={(e) => handleMedicationChange(e, index)}
+            />
+            <input
+              type="text"
+              name="frequency"
+              placeholder="Frequency"
+              value={medication.frequency}
+              onChange={(e) => handleMedicationChange(e, index)}
+            />
+            <button type="button" onClick={() => handleRemoveMedication(index)}>
+              Remove
+            </button>
+          </div>
+          ))}
+          <button type="button" onClick={handleAddMedication}>
+            Add Medication
+          </button>
+          
+          <h1>Treatments</h1>
+        {treatments.map((treatment, index) => (
+          <div key={index}>
+            <input
+              type="text"
+              name="name"
+              placeholder="Treatment Name"
+              value={treatment.name}
+              onChange={(e) => handleTreatmentChange(e, index)}
+            />
+            <input
+              type="text"
+              name="description"
+              placeholder="Description"
+              value={treatment.description}
+              onChange={(e) => handleTreatmentChange(e, index)}
+            />
+            <input
+              type="text"
+              name="startDate"
+              placeholder="Start Date"
+              value={treatment.startDate}
+              onChange={(e) => handleTreatmentChange(e, index)}
+            />
+            <input
+              type="text"
+              name="endDate"
+              placeholder="End Date"
+              value={treatment.endDate}
+              onChange={(e) => handleTreatmentChange(e, index)}
+            />
+            <button type="button" onClick={() => handleRemoveTreatment(index)}>
+              Remove
+            </button>
+          </div>
+            ))}
+            <button type="button" onClick={handleAddTreatments}>
+              Add Treatment
+            </button>
+
+            <h1>Allergies</h1>
+            {allergies.map((allergy, index) => (
+          <div key={index}>
+          <input
+            type="text"
+            name="name"
+            placeholder="Allergy Name"
+            value={allergy.name}
+            onChange={(e) => handleAllergiesChange(e, index)}
+          />
+          <input
+            type="text"
+            name="severity"
+            placeholder="Severity"
+            value={allergy.severity}
+            onChange={(e) => handleAllergiesChange(e, index)}
+          />
+          <input
+            type="text"
+            name="reaction"
+            placeholder="Reaction"
+            value={allergy.reaction}
+            onChange={(e) => handleAllergiesChange(e, index)}
+          />
+          <button type="button" onClick={() => handleRemoveAllergies(index)}>
+            Remove
+          </button>
+        </div>
+          ))}
+          <button type="button" onClick={handleAddAllergies}>
+            Add Allergy
+          </button>
+
         <button type="submit" className="btn btn-primary">Submit</button>
       </form>
     </div>
@@ -105,3 +271,4 @@ const AddMedicalRecordForm = () => {
 };
 
 export default AddMedicalRecordForm;
+

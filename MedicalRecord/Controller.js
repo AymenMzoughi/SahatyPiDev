@@ -3,20 +3,20 @@ const cors = require('cors');
 var router=express.Router()
 var service=require("./Service")
 const app = express();
-// app.use(express.static('uploads'));
+app.use(cors({credentials: true, origin: "http://localhost:4000" }));
 const multer = require('multer');
 
     // Storage configuration
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    // specify the destination folder for uploaded files
-    cb(null, './uploads')
-  },
-  filename: function (req, file, cb) {
-    // specify the file name for uploaded files
-    cb(null, file.originalname)
-  }
-})
+    const storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(null, 'uploads/'); // Specify the destination folder for uploaded files
+      },
+      filename: function (req, file, cb) {
+        cb(null, file.originalname); // Specify the filename for uploaded files
+      }
+    });
+    
+
 
 // Filter for accepted file types
 const fileFilter = (req, file, cb) => {
@@ -41,6 +41,5 @@ router.delete("/deleteAlergyRec/:allergyId/:doctorId", service.deleteAllergyFrom
 router.delete("/deleteMedicationRec/:medicationId/:doctorId", service.deleteMedicationFromMedicalRecord)
 router.delete("/deleteTreatmentRec/:treatmentId/:doctorId", service.deleteTreatmentFromMedicalRecord)
 router.get("/showMedRec", service.getAllMedicalRecords)
-router.get("/download/:filePath(*)", service.downloadFile)
 router.get("/myMedicalRec/:patientId",service.getMedicalRecordByPatientId)
 module.exports = router;
