@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Ambulance = require('./Models')
 const axios = require('axios');
+const Hospital = require('../Hospital/Models')
 
   // Get all ambulances
 const getAmbulances = async (req, res, next) => {
@@ -80,10 +81,62 @@ const reserveAmbulance = async (req, res, next) => {
     }
   };
   
+  const assignAmbulanceToHospital = async (req, res) => {
+    try {
+      const { hospitalId, ambulanceId } = req.params;
+  
+      // Find hospital by ID
+      const hospital = await Hospital.findById(hospitalId);
+  
+      if (!hospital) {
+        return res.status(404).json({ success: false, message: 'Hospital not found' });
+      }
+  
+      // Find ambulance by ID
+      const ambulance = await Ambulance.findById(ambulanceId);
+  
+      if (!ambulance) {
+        return res.status(404).json({ success: false, message: 'Ambulance not found' });
+      }
+  
+      // Remove ambulance ID from its old hospital if it exists
+      if (ambulance.hospital) {
+        const oldHospital = await Hospital.findById(ambulance.hospital);
+        if (oldHospital) {
+          oldHospital.ambulances = oldHospital.ambulances.filter(id => id.toString() !== ambulanceId.toString());
+          await oldHospital.save();
+        }
+      }
+  
+      // Update ambulance coordinates with hospital coordinates
+      ambulance.latitude = hospital.location.latitude;
+      ambulance.longitude = hospital.location.longitude;
+      ambulance.hospital = hospitalId; // Set hospital ID in ambulance
+  
+      // Update hospital's ambulances array with assigned ambulance
+      hospital.ambulances.push(ambulanceId);
+  
+      // Save updated hospital and ambulance
+      await hospital.save();
+      await ambulance.save();
+  
+      res.status(200).json({ success: true, message: 'Ambulance assigned to hospital successfully' });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ success: false, message: err.message });
+    }
+  };
+  
+  
+  
+  
+  
+
   module.exports = {
     getAmbulances,
     addAmbulance,
     reserveAmbulance,
-    unreserveAmbulance
+    unreserveAmbulance,
+    assignAmbulanceToHospital
   };
   

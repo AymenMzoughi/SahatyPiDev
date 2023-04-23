@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const ambulanceSchema = new mongoose.Schema({
   name: {
@@ -13,8 +14,11 @@ const ambulanceSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user'
   },
+  hospital: {  
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Hospital'
+  },
   createdAt: { type: Date},
-
   latitude: {
     type: Number,
     required: true

@@ -8,4 +8,5 @@ router.get('/', service.getAmbulances);
 router.post('/add', service.addAmbulance);
 router.post('/reserve/:clientId/:ambulanceId', service.reserveAmbulance)
 router.post('/unreserve/:ambulanceId', service.unreserveAmbulance)
+router.put('/assignToHospital/:hospitalId/:ambulanceId', service.assignAmbulanceToHospital)
 module.exports = router;

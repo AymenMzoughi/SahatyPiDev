@@ -6,6 +6,7 @@ const cors = require('cors');
 const mongoose = require("mongoose");
 var medicalrecordRoutes = require("./MedicalRecord/Controller");
 var AmbulanceRoutes = require("./Ambulance/Controller")
+var HospitalRoutes = require("./Hospital/Controller")
 
 
 // Allow requests from the origin of your React application
@@ -45,6 +46,7 @@ app.get('/uploads/', function (req, res) {
 app.use(express.json())
 app.use("/MedicalRecord", medicalrecordRoutes);
 app.use("/Ambulance",AmbulanceRoutes );
+app.use("/Hospital", HospitalRoutes)
 
 // Database
 const database = (module.exports = () => {
