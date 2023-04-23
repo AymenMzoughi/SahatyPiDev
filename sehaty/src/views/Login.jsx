@@ -15,7 +15,7 @@ const Login = () => {
     setShowPassword(!showPassword);
   };
 
-  const [email, setEmail] = useState("");
+  const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -29,7 +29,7 @@ const Login = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          email,
+          mail,
           password,
         }),
       });
@@ -64,18 +64,18 @@ const Login = () => {
           <Col xs={12} md={6}>
             <center>
               <HeroTitle>Welcome back !</HeroTitle>
-              <p>Please enter your email and password to log in.</p>
+              <p>Please enter your mail and password to log in.</p>
             </center>
             <Form>
-              <Form.Group className="mb-3" controlId="email">
-                <Form.Label>Email address</Form.Label>
+              <Form.Group className="mb-3" controlId="mail">
+                <Form.Label>mail address</Form.Label>
                 <Form.Control
                   onChange={(e) => {
                     e.preventDefault();
-                    setEmail(e.target.value);
+                    setMail(e.target.value);
                   }}
                   type="email"
-                  placeholder="Enter email"
+                  placeholder="Enter Email"
                 />
               </Form.Group>
               <Form.Group className="mb-3" controlId="password">

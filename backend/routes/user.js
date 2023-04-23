@@ -1,11 +1,17 @@
-const router = require('express').Router()
-const userController = require('../controllers/userController')
-const requireAuth = require("../middleware/requireAuth") 
-router.post("/register",userController.signUpUser)
-router.post("/login",userController.loginUser);
-// Protected route
-router.use(requireAuth)
-router.get('/login', userController.getUser);
-router.put('/login', userController.editUser);
+const router = require("express").Router();
+const userController = require("../controllers/userController");
+const requireAuth = require("../middleware/requireAuth");
+router.post("/register", userController.signUpUser);
+router.post("/login", userController.loginUser);
+router.post("/forget-password", userController.forget);
+router.post("/reset-password", userController.reset);
 
-module.exports = router ; 
+// Protected route
+router.use(requireAuth);
+router.get("/login", userController.getUser);
+router.put("/login", userController.editUser);
+router.post("/addClaim", userController.addClaim);
+router.post("/bookAppointment", userController.bookAppointment);
+router.post("/updateClaim/:claimId", userController.updateClaim);
+router.delete("/deleteClaim/:claimId", userController.deleteClaim);
+module.exports = router;

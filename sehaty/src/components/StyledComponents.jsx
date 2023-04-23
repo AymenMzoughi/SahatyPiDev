@@ -18,7 +18,7 @@ export const HeroTitle = styled.h1`
 `;
 export const Section = styled(Container)`
   margin: 10vh auto;
-  min-height: 100vh;
+  min-height: 80vh;
 `;
 export const DoctorCard = styled(Card)`
   img {

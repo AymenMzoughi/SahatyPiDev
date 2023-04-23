@@ -1,17 +1,24 @@
 import { Col, Row } from "react-bootstrap";
 import { HeroTitle, MainButton, Section } from "./StyledComponents";
 import Doctor from "./Doctor";
+import { useEffect, useState } from "react";
 
 const Doctors = (props) => {
-  const doctors = [
-    "Aymen Mzoughi",
-    "Rayen bakali",
-    "Anouar mhamdi",
-    "Zeineb Bouaalegui",
-    "Hassan Kaabechi",
-    "Flen ben Foulen",
-    "Flena Foulenia",
-  ];
+  const [doctors, setDoctors] = useState([]);
+  const getDoctors = async () => {
+    const response = await fetch("http://localhost:5000/admin/getAllDoctors", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    setDoctors(data.data);
+  };
+  useEffect(() => {
+    getDoctors();
+  }, []);
+
   return (
     <Section>
       {props.landing ? (
@@ -30,11 +37,12 @@ const Doctors = (props) => {
       )}
 
       <Row style={{ justifyContent: "center" }}>
-        {doctors.map((doctor) => (
-          <Col key={doctors.indexOf(doctor)} xs={12} sm={6} md={4} lg={3}>
-            <Doctor doctor={doctor} />
-          </Col>
-        ))}
+        {doctors &&
+          doctors.map((doctor) => (
+            <Col key={doctors.indexOf(doctor)} xs={12} sm={6} md={4} lg={3}>
+              <Doctor doctor={doctor} />
+            </Col>
+          ))}
       </Row>
       <Row style={{ justifyContent: "center" }}>
         <center>

@@ -13,11 +13,11 @@ const Register = () => {
   //   };
 
   const [formData, setFormData] = useState({
-    nom: "",
-    prenom: "",
+    firstname: "",
+    lastname: "",
     numero: "",
     role: "",
-    email: "",
+    mail: "",
     password: "",
     passwordConfirm: "",
   });
@@ -72,23 +72,23 @@ const Register = () => {
             </center>
             <Form ref={form}>
               <Form.Group controlId="formBasicName">
-                <Form.Label>Nom</Form.Label>
+                <Form.Label>firstname</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter nom"
-                  name="nom"
-                  value={formData.nom}
+                  placeholder="Enter firstname"
+                  name="firstname"
+                  value={formData.firstname}
                   onChange={handleChange}
                 />
               </Form.Group>
 
               <Form.Group controlId="formBasicLastName">
-                <Form.Label>Prenom</Form.Label>
+                <Form.Label>lastname</Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Enter Prenom"
-                  name="prenom"
-                  value={formData.prenom}
+                  placeholder="Enter lastname"
+                  name="lastname"
+                  value={formData.lastname}
                   onChange={handleChange}
                 />
               </Form.Group>
@@ -119,13 +119,13 @@ const Register = () => {
                 </Form.Control>
               </Form.Group>
 
-              <Form.Group controlId="formBasicEmail">
+              <Form.Group controlId="formBasicmail">
                 <Form.Label>Email address</Form.Label>
                 <Form.Control
                   type="email"
-                  placeholder="Enter email"
-                  name="email"
-                  value={formData.email}
+                  placeholder="Enter Email"
+                  name="mail"
+                  value={formData.mail}
                   onChange={handleChange}
                 />
               </Form.Group>

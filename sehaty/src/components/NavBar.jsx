@@ -3,21 +3,20 @@ import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { ButtonGroup, Image } from "react-bootstrap";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import logo from "../assets/logo.png";
 import AccountCollapse from "./AccountCollapse";
 import { MainButton } from "./StyledComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 function NavBar() {
   const isConnected = useSelector((state) => state.connect.isConnected);
   const navigate = useNavigate();
-  const pages = ["Home", "Doctors", "Services", "Contact"];
-  useEffect(() => {
-    console.log(isConnected);
-  }, [isConnected]);
+  const pages = ["Home", "Doctors", "Services", "Contact", "Appointment"];
+  isConnected ? (pages[3] = "Claim") : (pages[3] = "Contact");
+  const activeRoute = useLocation();
   return (
     <Navbar bg="light" expand="lg">
       <Container>
@@ -32,7 +31,11 @@ function NavBar() {
             navbarScroll
           >
             {pages.map((page) => (
-              <Nav.Link active key={pages.indexOf(page)} href={`/${page}`}>
+              <Nav.Link
+                active={activeRoute.pathname.slice(1) === page}
+                key={pages.indexOf(page)}
+                href={`/${page}`}
+              >
                 {page}
               </Nav.Link>
             ))}
