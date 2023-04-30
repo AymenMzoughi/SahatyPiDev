@@ -8,7 +8,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "./theme";
 import { Provider } from "react-redux";
-import store from "./store";
+import { store } from './slices/connectSlice';
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>

@@ -1,7 +1,8 @@
 import { Form, Container, Row, Col, FormGroup } from "react-bootstrap";
 import { MainButton, HeroTitle } from "../components/StyledComponents";
-import { useState } from "react";
+import { useEffect , useState} from "react";
 import { useNavigate } from "react-router-dom";
+
 
 const Claim = () => {
   const [doctor, setDoctor] = useState(false);
@@ -9,6 +10,17 @@ const Claim = () => {
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
   const jwtToken = localStorage.getItem("token");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const jwtToken = localStorage.getItem("token");
+    console.log(jwtToken)
+    if (!jwtToken) {
+      // redirect to login page if user is not logged in
+      navigate("/login");
+      
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

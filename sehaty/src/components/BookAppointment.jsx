@@ -28,7 +28,7 @@ const Appointment = () => {
             Authorization: `Bearer ${jwtToken}`,
           },
           body: JSON.stringify({
-            userId: "6441341aea4a213e8905b4d2",
+            userId: "6441341aea4a213  e8905b4d2",
             doctorId: "dr foulen",
             time,
             date,

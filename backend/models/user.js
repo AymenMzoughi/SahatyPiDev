@@ -31,9 +31,6 @@ const userSchema = new Schema({
     required: true,
     minlength: 8,
   },
-  token: {
-    type: String,
-  },
   resetToken: { type: String },
   seenNotifications: {
     required: false,
