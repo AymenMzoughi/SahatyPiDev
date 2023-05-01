@@ -20,6 +20,10 @@ const Claim = () => {
       navigate("/login");
       
     }
+    //exemple kif t7eb tjib id mtaa user li connecté
+    const user = JSON.parse(localStorage.getItem("user"));
+      const userId = userId;
+      console.log("test",userId)
   }, [navigate]);
 
   const handleSubmit = async (e) => {

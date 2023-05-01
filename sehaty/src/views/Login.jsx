@@ -33,9 +33,11 @@ const Login = () => {
         try {
           const response = await axios.post("http://localhost:5000/user/login", { mail: inputs.mail, password: inputs.password });
           const token = response.data.user.token;
-          console.log(token);
+          const user = response.data.user
+  
+          localStorage.setItem("user", JSON.stringify(user));
           localStorage.setItem("token", token);
-          console.log("ls", localStorage)
+        
           history('/Claim')
           dispatch(AuthActions.login(token));
           
