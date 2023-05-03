@@ -4,9 +4,10 @@ import { Dropdown } from "react-bootstrap";
 import { useState } from "react";
 import { MainButton } from "./StyledComponents";
 import { useDispatch } from "react-redux";
-import { logout } from "../slices/connectSlice";
+import { AuthActions } from '../slices/connectSlice';
 const AccountCollapse = () => {
   const dispatch = useDispatch();
+  const token = localStorage.getItem("token")
   const [showDropdown, setShowDropdown] = useState(false);
   const handleClick = () => {
     setShowDropdown((prev) => !prev);
@@ -34,7 +35,9 @@ const AccountCollapse = () => {
           eventKey="4"
           style={{ color: "red", fontWeight: "medium" }}
           onClick={() => {
-            dispatch(logout());
+            dispatch(AuthActions.logout(token));
+            window.location.reload()
+            localStorage.removeItem("token")
           }}
         >
           Logout

@@ -11,11 +11,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
+
 function NavBar() {
-  const isConnected = useSelector((state) => state.connect.isConnected);
+  const isConnected = useSelector((state) => state.auth.isLoggedIn);
+  console.log(isConnected);
   const navigate = useNavigate();
-  const pages = ["Home", "Doctors", "Services", "Contact", "Appointment"];
-  isConnected ? (pages[3] = "Claim") : (pages[3] = "Contact");
+  const pages = ["Home", "Doctors", "Services", "Contact", "Appointment","MedicalTips"];
+   isConnected ? (pages[3] = "Claim") : (pages[3] = "Contact");
+  
   const activeRoute = useLocation();
   return (
     <Navbar bg="light" expand="lg">

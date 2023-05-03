@@ -1,32 +1,29 @@
 import React, { useState } from "react";
 import { Button, Container, Form, Row, Col } from "react-bootstrap";
-
+import axios from 'axios';
 import { useParams } from "react-router-dom";
 
 function ResetPassword() {
-  const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState("");
-  let { token } = useParams("token");
+  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
+
   const handleReset = async (e) => {
     e.preventDefault();
+    const path = window.location.pathname;
+    const parts = path.split("/");
+    const token=parts[parts.length - 1]
+    console.log(token)
 
+    console.log("tok: ",token)
     try {
-      const response = await fetch(
-        "http://localhost:5000/user/reset-password",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ resetToken: token, password }),
-        }
-      );
+      const response = await axios.post('http://localhost:5000/user/resetpassword', { token, password });
 
-      const data = await response.json();
-      setMessage(data.message);
+      console.log(response.data);
+      setMessage(response.data.message);
     } catch (error) {
-      setMessage(error.message);
+      console.log(error.response.data);
+      setMessage(error.response.data.message);
     }
   };
 

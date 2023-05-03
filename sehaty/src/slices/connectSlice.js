@@ -1,23 +1,34 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { configureStore, createSlice } from '@reduxjs/toolkit';
 
-const connectSlice = createSlice({
-  name: "connect",
-  initialState: {
-    isConnected: false,
-    user: null,
-  },
-  reducers: {
-    login: (state) => {
-      state.isConnected = true;
-      state.user = fetch();
+const authSlice = createSlice({
+    name: 'auth',
+    initialState: { isLoggedIn: false },
+    reducers: {
+        login(state) {
+            state.isLoggedIn = true;
+        },
+        logout(state) {
+            state.isLoggedIn = false;
+        },
     },
-    logout: (state) => {
-      state.isConnected = false;
-      state.user = null;
-      console.log("logged out");
-    },
-  },
 });
 
-export const { login, logout } = connectSlice.actions;
-export default connectSlice.reducer;
+export const AuthActions = authSlice.actions;
+
+export const initializeStore = () => {
+    const token = localStorage.getItem('token');
+    const preloadedState = {
+        auth: {
+            isLoggedIn: token ? true : false,
+        },
+    };
+
+    return configureStore({
+        reducer: {
+            auth: authSlice.reducer,
+        },
+        preloadedState,
+    });
+};
+
+export const store = initializeStore();

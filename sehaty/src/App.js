@@ -11,11 +11,18 @@ import NotFound from "./views/NotFound";
 import ForgotPassword from "./components/ForgetPassword";
 import ResetPassword from "./components/ResetPassword";
 import BookAppointment from "./components/BookAppointment";
+import Tips from "./views/Tips";
+import Room from "./views/Room";
+import Payment from "./views/payment";
+import Dashboard from "./views/dashboard";
+import { useLocation } from 'react-router-dom';
 
 function App() {
+  const location = useLocation();
+
   return (
     <div className="App">
-      <NavBar />
+      {location.pathname === '/dash' || location.pathname==='/dash/addTip' || location.pathname==='/dash/ListTip' ? null : <NavBar />}
       <Routes>
         <Route path="/Appointment" element={<BookAppointment />} />
         <Route path="/contact" element={<Contact />} />
@@ -24,9 +31,14 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path={"/"} element={<Landing />} />
-        <Route path={"/forgot-password"} element={<ForgotPassword />} />
-        <Route path={"/reset-password/:token"} element={<ResetPassword />} />
+        <Route path={"/forgetpassword"} element={<ForgotPassword />} />
+        <Route path={"/resetpassword/:token"} element={<ResetPassword />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/MedicalTips/*" element={<Tips />} />
+        <Route path="/room/:roomID" element={<Room />} />
+        <Route path="/payment" element={<Payment />} />
+        <Route path="dash/*" element={<Dashboard />} />
+
       </Routes>
     </div>
   );
