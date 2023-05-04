@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
+import NavDropdown from "react-bootstrap/NavDropdown";
 
 function NavBar() {
   const isConnected = useSelector((state) => state.auth.isLoggedIn);
@@ -33,15 +34,27 @@ function NavBar() {
             style={{ maxHeight: "100px" }}
             navbarScroll
           >
-            {pages.map((page) => (
-              <Nav.Link
-                active={activeRoute.pathname.slice(1) === page}
-                key={pages.indexOf(page)}
-                href={`/${page}`}
-              >
-                {page}
-              </Nav.Link>
-            ))}
+                 {pages.map((page) => {
+              if (page === "MedicalTips") {
+                return (
+                  <NavDropdown title={page} key={page}>
+                    <NavDropdown.Item href="../MedicalTips/ListTip">ListTip</NavDropdown.Item>
+                    <NavDropdown.Item href="../MedicalTips/search">Search</NavDropdown.Item>
+                    <NavDropdown.Item href="../payment">VideoPlayer</NavDropdown.Item>
+                  </NavDropdown>
+                );
+              } else {
+                return (
+                  <Nav.Link
+                    active={activeRoute.pathname.slice(1) === page}
+                    key={page}
+                    href={`/${page}`}
+                  >
+                    {page}
+                  </Nav.Link>
+                );
+              }
+            })}
           </Nav>
           <Form className="d-flex">
             <Form.Control

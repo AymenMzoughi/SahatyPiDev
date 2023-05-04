@@ -32,6 +32,8 @@ app.use(bodyParser.json());
 router.post("/addtip", upload, tipService.addTips);
 router.get("/getTips", tipService.getTips);
 router.get("/searchTip/:title", tipService.searchTipsBytitle);
+router.post("/invitetochat", tipService.sendEmail);
+
 
 router.delete("/deleteTip/:id", tipService.deleteTip);
 router.put("/updatTip", upload, tipService.updateTip);

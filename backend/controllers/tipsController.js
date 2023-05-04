@@ -1,4 +1,5 @@
 const TipModel = require("../models/tipsModel");
+const nodemailer = require("nodemailer");
 
 
 const ERROR_MESSAGES = {
@@ -86,7 +87,36 @@ const updateTip = async (req, res) => {
       res.status(500).json({ message: 'Server Error' });
     }
 };
+const sendEmail = async(req,res) => {
+  const email = req.body.email;
+  const roomCode = req.body.roomCode;
+  // Create a transporter object using SMTP transport
+  const transporter = nodemailer.createTransport({
+  service:'gmail',
+    auth: {
+      user: 'mhamdianwer9@gmail.com',
+      pass: 'pvkvucnortxyttob'
+    }
+  });
+
+  // Construct the email message
+  const message = {
+    from: "mhamdianwer9@gmail.com",
+    to: email,
+    subject: "Join Video Chat Room",
+    text: `Here is the link to join the video chat room: http://localhost:3000/room/${roomCode}`,
+  };
+
+  // Send the email using the transporter
+  transporter.sendMail(message, (err, info) => {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log(info);
+    }
+  });
+};
 
 
-  module.exports = { addTips ,getTips,deleteTip,updateTip,searchTipsBytitle};
+  module.exports = { addTips ,getTips,deleteTip,updateTip,searchTipsBytitle,sendEmail};
 
