@@ -5,6 +5,7 @@ import { useState } from "react";
 import { MainButton } from "./StyledComponents";
 import { useDispatch } from "react-redux";
 import { AuthActions } from '../slices/connectSlice';
+import { useNavigate } from "react-router-dom";
 const AccountCollapse = () => {
   const dispatch = useDispatch();
   const token = localStorage.getItem("token")
@@ -12,6 +13,7 @@ const AccountCollapse = () => {
   const handleClick = () => {
     setShowDropdown((prev) => !prev);
   };
+  const navigate = useNavigate();
   return (
     <Dropdown>
       <MainButton
@@ -36,7 +38,7 @@ const AccountCollapse = () => {
           style={{ color: "red", fontWeight: "medium" }}
           onClick={() => {
             dispatch(AuthActions.logout(token));
-            window.location.reload()
+            navigate('/home')
             localStorage.removeItem("token")
           }}
         >

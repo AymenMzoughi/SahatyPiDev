@@ -1,25 +1,61 @@
+import { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { ButtonGroup, Image } from "react-bootstrap";
-// import { useEffect, useState } from "react";
 import logo from "../assets/logo.png";
 import AccountCollapse from "./AccountCollapse";
 import { MainButton } from "./StyledComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { useNavigate, useLocation } from "react-router-dom";
+import { faSearch } from "@fortawesome/free-solid-svg-icons"; // change the imported icon
+import { useNavigate, useLocation, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function NavBar() {
+  const [pages, setPages] = useState([]);
   const isConnected = useSelector((state) => state.auth.isLoggedIn);
-  console.log(isConnected);
+  const role = useSelector((state) => state.auth.role);
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user ? user._id : null;
   const navigate = useNavigate();
-  const pages = ["Home", "Doctors", "Services", "Contact", "Appointment"];
-   isConnected ? (pages[3] = "Claim") : (pages[3] = "Contact");
-  
   const activeRoute = useLocation();
+
+  // Logic for setting the pages array
+  let newPages = [];
+  if (isConnected) {
+    if (role === "Patient") {
+      newPages = [
+        { name: "Home", path: "/home" },
+        { name: "Doctors", path: "/doctors" },
+        { name: "Services", path: "/services" },
+        { name: "Medical Record", path: `/medicalRecordPatient/${userId}` },
+        { name: "Appointment", path: "/appointment" },
+      ];
+    } else if (role === "Docteur") {
+      newPages = [
+        { name: "Home", path: "/home" },
+        { name: "Doctors", path: "/doctors" },
+        { name: "Services", path: "/services" },
+        { name: "Medical RecordD", path: `/medicalRecordDocteur/${userId}` },
+        { name: "List Patient", path: `/patientlist/${userId}` },
+        { name: "Appointment", path: "/appointment" },
+      ];
+    }
+  } else {
+    newPages = [
+      { name: "Home", path: "/home" },
+      { name: "Doctors", path: "/doctors" },
+      { name: "Services", path: "/services" },
+      { name: "Contact", path: "/contact" },
+      { name: "Appointment", path: "/appointment" },
+    ];
+  }
+
+  useEffect(() => {
+    setPages(newPages);
+  }, [isConnected, role, userId]);
+
   return (
     <Navbar bg="light" expand="lg">
       <Container>
@@ -35,23 +71,23 @@ function NavBar() {
           >
             {pages.map((page) => (
               <Nav.Link
-                active={activeRoute.pathname.slice(1) === page}
-                key={pages.indexOf(page)}
-                href={`/${page}`}
+                active={activeRoute.pathname === page.path} // fix the condition for active route
+                key={page.path} // use path instead of page for the key
+                href={page.path} // use path instead of page for the href
               >
-                {page}
+                {page.name}
               </Nav.Link>
             ))}
           </Nav>
           <Form className="d-flex">
             <Form.Control
               type="search"
-              placeholder="Search"
+              placeholder="Room d"
               className="me-2"
               aria-label="Search"
             />
-            <MainButton className="">
-              <FontAwesomeIcon icon={faMagnifyingGlass} />
+            <MainButton href='/room/'>
+              Join meet
             </MainButton>
             {!isConnected ? (
               <ButtonGroup>

@@ -1,8 +1,9 @@
 const express = require("express");
 require("dotenv").config();
-const cors = require("cors");
-const mongoose = require("mongoose");
 const app = express();
+app.use(express.static('uploads'));
+const cors = require('cors');
+const mongoose = require("mongoose");
 const port = process.env.PORT || 5000;
 const uri = process.env.DB_URI;
 const userRouter = require("./routes/user");
@@ -15,14 +16,27 @@ mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-app.use(cors());
-app.use(express.json());
+
 
 const connection = mongoose.connection;
 connection.once("open", () => {
   console.log("db connected");
 });
-app.use(cors());
+
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+
+
+// Add the CORS middleware to your server
+app.use(cors(corsOptions));
+
+// Route to handle image requests with CORS headers
+app.get('/uploads/', function (req, res) {
+  const imagePath = path.join(__dirname, 'backend/uploads');
+  res.sendFile(imagePath);
+});
 app.use(express.json());
 
 app.use("/user", userRouter);

@@ -14,7 +14,7 @@ const Claim = () => {
 
   useEffect(() => {
     const jwtToken = localStorage.getItem("token");
-    console.log(jwtToken)
+    
     if (!jwtToken) {
       // redirect to login page if user is not logged in
       navigate("/login");

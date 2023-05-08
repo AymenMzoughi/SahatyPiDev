@@ -5,8 +5,7 @@ let Appointment = require("../models/appointment");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const jwt = require('jsonwebtoken');
-const passport = require('passport');
-const { ObjectId } = require('mongoose');
+
 
 //Login
 const loginUser = async (req, res, next) => {
@@ -14,33 +13,33 @@ const loginUser = async (req, res, next) => {
 
   let existingUser;
   try {
-      existingUser = await UserModel.findOne({ mail: mail });
-      
+    existingUser = await UserModel.findOne({ mail: mail });
+
   } catch (err) {
-      return new Error(err);
+    return new Error(err);
   }
   if (!existingUser) {
-      return res.status(401).json({message:"User not found. Signup Please"})
+    return res.status(401).json({ message: "User not found. Signup Please" })
   }
-  const isPasswordCorrect = bcrypt.compareSync(password,existingUser.password);
+  const isPasswordCorrect = bcrypt.compareSync(password, existingUser.password);
   if (!isPasswordCorrect) {
-      return res.status(401).json({message:'Invalid Password'})
+    return res.status(401).json({ message: 'Invalid Password' })
   }
-const token = jwt.sign({id: existingUser._id }, process.env.JWT_SECRET_KEY, {
-  expiresIn: "1d",
+  const token = jwt.sign({ id: existingUser._id }, process.env.JWT_SECRET_KEY, {
+    expiresIn: "1d",
 
-});
-console.log("Generated Token\n", token);
-res.cookie(String(existingUser._id), token, {
-  path: "/",
-  expires: new Date(Date.now() + 1000 * 30),
-  httpOnly: true,
-  sameSite: 'lax',
-});
-existingUser.token = token;
+  });
+  console.log("Generated Token\n", token);
+  res.cookie(String(existingUser._id), token, {
+    path: "/",
+    expires: new Date(Date.now() + 1000 * 30),
+    httpOnly: true,
+    sameSite: 'lax',
+  });
+  existingUser.token = token;
   return res
-  .status(200)
-  .json({message:'Successfully Logged In', user: existingUser });
+    .status(200)
+    .json({ message: 'Successfully Logged In', user: existingUser });
 };
 //Sign up
 const signUpUser = async (req, res) => {
@@ -59,7 +58,7 @@ const signUpUser = async (req, res) => {
 };
 //Edit
 const editUser = (req, res) => {
-  UserModel.find({ mail: req.body.mail }, (err, user) => {});
+  UserModel.find({ mail: req.body.mail }, (err, user) => { });
 };
 //Get
 const getUser = (req, res) => {
@@ -88,7 +87,7 @@ const forget = async (req, res, next) => {
 
   try {
     const user = await UserModel.findOne({ mail });
-    
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -159,7 +158,7 @@ const reset = async (req, res, next) => {
     const usertok = await UserModel.findOne({
       resetToken: req.body.token,
     });
-   
+
     console.log(usertok)
 
     if (!usertok) {
@@ -170,7 +169,7 @@ const reset = async (req, res, next) => {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
     usertok.password = hash;
-    usertok.resetToken = null; 
+    usertok.resetToken = null;
     await usertok.save();
 
     const mailOptions = {

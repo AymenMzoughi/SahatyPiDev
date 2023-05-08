@@ -1,26 +1,31 @@
 import { Col, Container, Form, Row } from "react-bootstrap";
 import { HeroTitle, MainButton, Section } from "../components/StyledComponents";
-// import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import image from "../assets/med.jpg";
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-const Register = () => {
-  // const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
-  //   const handleTogglePassword = () => {
-  //     setShowPassword(!showPassword);
-  //   };
 
+const Register = () => {
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     firstname: "",
     lastname: "",
     numero: "",
     role: "",
+    pdp:"",
     mail: "",
     password: "",
     passwordConfirm: "",
   });
+
+  const handleImageChange = (event) => {
+    const selectedFile = event.target.files[0];
+    
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      pdp: "uploads/" +selectedFile.name,
+    }));
+    console.log(selectedFile.name)
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -29,6 +34,7 @@ const Register = () => {
 
   const navigate = useNavigate();
   const form = useRef();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const response = await fetch("http://localhost:5000/user/register", {
@@ -38,11 +44,12 @@ const Register = () => {
       },
       body: JSON.stringify(formData),
     });
+
     const data = await response.json();
+
     if (response.ok) {
       navigate("/");
     } else {
-      //form.reset();
       setError(data);
     }
   };
@@ -81,7 +88,7 @@ const Register = () => {
                   onChange={handleChange}
                 />
               </Form.Group>
-
+              
               <Form.Group controlId="formBasicLastName">
                 <Form.Label>lastname</Form.Label>
                 <Form.Control
@@ -92,7 +99,9 @@ const Register = () => {
                   onChange={handleChange}
                 />
               </Form.Group>
-
+              <Form.Group>
+              <Form.Control type="file" className="form-control-file" id="images" multipleaccept="image/*" onChange={handleImageChange} />
+              </Form.Group>
               <Form.Group controlId="formBasicPhoneNumber">
                 <Form.Label>Numero</Form.Label>
                 <Form.Control
