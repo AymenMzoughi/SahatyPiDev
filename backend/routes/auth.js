@@ -1,59 +1,47 @@
-const router = require("express").Router();
-const passport = require("passport");
+import { Router } from 'express';
+import { logOutUser, loginFailed, loginSuccess } from '../controllers/auth.js';
+import passport from '../config/passport.js';
+import { CLIENT_URL } from '../config/default.js';
 
-const CLIENT_URL = "http://localhost:3000/";
+const router = Router();
 
-router.get("/login/success", (req, res) => {
-  if (req.user) {
-    res.status(200).json({
-      success: true,
-      message: "successfull",
-      user: req.user,
-      //   cookies: req.cookies
-    });
-  }
-});
+router.get('/login/success', loginSuccess);
 
-router.get("/login/failed", (req, res) => {
-  res.status(401).json({
-    success: false,
-    message: "failure",
-  });
-});
+router.get('/login/failed', loginFailed);
 
-router.get("/logout", (req, res) => {
-  req.logout();
-  res.redirect(CLIENT_URL);
-});
+router.get('/logout', logOutUser);
 
-router.get("/google", passport.authenticate("google", { scope: ["profile"] }));
+router.get('/google', passport.authenticate('google', { scope: ['profile'] }));
 
 router.get(
-  "/google/callback",
-  passport.authenticate("google", {
-    successRedirect: CLIENT_URL,
-    failureRedirect: "/login/failed",
-  })
+	'/google/callback',
+	passport.authenticate('google', {
+		successRedirect: CLIENT_URL,
+		failureRedirect: '/login/failed',
+	})
 );
 
-router.get("/github", passport.authenticate("github", { scope: ["profile"] }));
+router.get('/github', passport.authenticate('github', { scope: ['profile'] }));
 
 router.get(
-  "/github/callback",
-  passport.authenticate("github", {
-    successRedirect: CLIENT_URL,
-    failureRedirect: "/login/failed",
-  })
+	'/github/callback',
+	passport.authenticate('github', {
+		successRedirect: CLIENT_URL,
+		failureRedirect: '/login/failed',
+	})
 );
-
-router.get("/facebook", passport.authenticate("facebook", { scope: ["profile"] }));
 
 router.get(
-  "/facebook/callback",
-  passport.authenticate("facebook", {
-    successRedirect: CLIENT_URL,
-    failureRedirect: "/login/failed",
-  })
+	'/facebook',
+	passport.authenticate('facebook', { scope: ['profile'] })
 );
 
-module.exports = router
+router.get(
+	'/facebook/callback',
+	passport.authenticate('facebook', {
+		successRedirect: CLIENT_URL,
+		failureRedirect: '/login/failed',
+	})
+);
+
+export default router;
