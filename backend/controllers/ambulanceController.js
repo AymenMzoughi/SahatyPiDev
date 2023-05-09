@@ -127,7 +127,6 @@ const reserveAmbulance = async (req, res, next) => {
       const { clientId, ambulanceId } = req.params;
       const { longitude, latitude } = req.body;
 
-      console.log('reclongitude:', req.body.longitude); // Added console.log to see value of reclongitude
 
       const ambulance = await Ambulance.findOneAndUpdate(
           { _id: ambulanceId, available: true },

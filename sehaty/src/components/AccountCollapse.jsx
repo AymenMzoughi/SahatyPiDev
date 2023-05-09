@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Dropdown } from "react-bootstrap";
 import { useState } from "react";
-import { MainButton } from "./StyledComponents";
+import { MainButton, ProfileButton } from "./StyledComponents";
 import { useDispatch } from "react-redux";
 import { AuthActions } from '../slices/connectSlice';
 import { useNavigate } from "react-router-dom";
@@ -16,12 +16,12 @@ const AccountCollapse = () => {
   const navigate = useNavigate();
   return (
     <Dropdown>
-      <MainButton
+      <ProfileButton
         style={{ backgroundColor: "white", color: "gray", borderColor: "gray" }}
         onClick={handleClick}
       >
         <FontAwesomeIcon icon={faUser} />
-      </MainButton>
+      </ProfileButton>
       <Dropdown.Menu
         style={{
           position: "absolute",

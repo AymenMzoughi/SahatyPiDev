@@ -3,10 +3,10 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { ButtonGroup, Image } from "react-bootstrap";
+import { Alert, ButtonGroup, Image } from "react-bootstrap";
 import logo from "../assets/logo.png";
 import AccountCollapse from "./AccountCollapse";
-import { MainButton } from "./StyledComponents";
+import { MainButton , ProfileButton, Loginbutton} from "./StyledComponents";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons"; // change the imported icon
 import { useNavigate, useLocation, Route } from "react-router-dom";
@@ -21,6 +21,21 @@ function NavBar() {
   const navigate = useNavigate();
   const activeRoute = useLocation();
 
+
+
+  const [roomId, setRoomId] = useState("");
+
+  const handleRoomIdChange = (event) => {
+    setRoomId(event.target.value);
+  };
+  const handleJoinMeet = () => {
+    if(roomId)
+    {
+     
+    window.location.href = `/room/${roomId}`;
+     }
+  };
+
   // Logic for setting the pages array
   let newPages = [];
   if (isConnected) {
@@ -30,7 +45,7 @@ function NavBar() {
         { name: "Doctors", path: "/doctors" },
         { name: "Services", path: "/services" },
         { name: "Medical Record", path: `/medicalRecordPatient/${userId}` },
-        { name: "Appointment", path: "/appointment" },
+        { name: "Ambulance", path: "/ambulance" },
       ];
     } else if (role === "Docteur") {
       newPages = [
@@ -42,15 +57,19 @@ function NavBar() {
         { name: "Appointment", path: "/appointment" },
       ];
     }
-  } else {
-    newPages = [
-      { name: "Home", path: "/home" },
-      { name: "Doctors", path: "/doctors" },
-      { name: "Services", path: "/services" },
-      { name: "Contact", path: "/contact" },
-      { name: "Appointment", path: "/appointment" },
-    ];
-  }
+    else if (role === 'Pharmacist') {
+			newPages = [...newPages, { name: 'Pharmacy', path: '/pharmacy' }];
+		}
+	} else {
+		newPages = [
+			{ name: 'Home', path: '/home' },
+			{ name: 'Doctors', path: '/doctors' },
+			{ name: 'Services', path: '/services' },
+			{ name: 'Appointment', path: '/appointment' },
+			{ name: 'Contact', path: '/contact' },
+			{ name: 'Pharmacy', path:'/pharmacy' },
+		];
+	}
 
   useEffect(() => {
     setPages(newPages);
@@ -82,30 +101,30 @@ function NavBar() {
           <Form className="d-flex">
             <Form.Control
               type="search"
-              placeholder="Room d"
+              placeholder="Room id"
               className="me-2"
               aria-label="Search"
+              value={roomId}
+              onChange={handleRoomIdChange}
             />
-            <MainButton href='/room/'>
-              Join meet
-            </MainButton>
+            <MainButton onClick={handleJoinMeet}>Join meet</MainButton>
             {!isConnected ? (
               <ButtonGroup>
-                <MainButton
+                <Loginbutton
                   onClick={() => {
                     navigate("/register");
                   }}
                   style={{ backgroundColor: "darkblue" }}
                 >
                   Register
-                </MainButton>
-                <MainButton
+                </Loginbutton>
+                <Loginbutton
                   onClick={() => {
                     navigate("/login");
                   }}
                 >
                   Login
-                </MainButton>
+                </Loginbutton>
               </ButtonGroup>
             ) : (
               <AccountCollapse />

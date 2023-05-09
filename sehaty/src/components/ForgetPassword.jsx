@@ -17,7 +17,7 @@ const ForgotPassword = () => {
       if (response.status === 200) {
         alert(response.data.message);
         setResetToken(response.data.resetToken); // Store the reset token value in state
-        navigate(`/resetpassword/${response.data.resetToken}`); 
+        navigate(`/login`); 
         console.log(response.data);// Navigate to the reset password page with the reset token as a URL parameter
       } else {
         alert(response.data.message);
@@ -29,7 +29,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <Container>
+    <Container className="mx-auto d-block" style={{ marginLeft: '80px', marginTop: '50px', width: '30rem' }} >
       <Form onSubmit={handleSubmit}>
         <Form.Group>
           <Form.Label htmlFor="mail">Email</Form.Label>
@@ -37,11 +37,12 @@ const ForgotPassword = () => {
             type="mail"
             id="mail"
             name="mail"
+            placeholder="Email"
             value={mail}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <Button type="submit">Submit</Button>
+          <Button type="submit" className="mx-auto d-block" style={{ marginLeft: '80px', marginTop: '20px'}}>Send Reset Email</Button>
         </Form.Group>
       </Form>
     </Container>

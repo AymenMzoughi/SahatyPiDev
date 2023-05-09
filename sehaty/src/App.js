@@ -4,7 +4,8 @@ import Landing from "./views/Landing";
 import Contact from "./views/Contact";
 import Claim from "./views/Claim";
 import NavBar from "./components/NavBar";
-import DoctorView from "./views/DoctorView";
+import Footer from "./components/footer"
+import DoctorView from "./components/Doctor";
 import Login from "./views/Login";
 import Register from "./views/Register";
 import NotFound from "./views/NotFound";
@@ -16,13 +17,16 @@ import MedicalRecordsD from "./views/showMedicalRecordDoctor";
 import AmbulanceServiceP from "./components/ambulancePatient";
 import PatientListDocteur from "./views/PatientList";
 import AddMedicalRecord from "./views/AddMedicalRecord";
+import GestionPharmacie from './components/GestionPharmacie';
+import PharmacyDetails from './components/PharmacyDetails';
 import Profile from "./views/Profile"
+import RoomPage from "./room";
 function App() {
   return (
     <div className="App">
       <NavBar />
       <Routes>
-        <Route path="/Appointment" element={<BookAppointment />} />
+        
         <Route path="/contact" element={<Contact />} />
         <Route path="/Claim" element={<Claim />} />
         <Route path="/doctors" element={<DoctorView />} />
@@ -37,9 +41,14 @@ function App() {
         <Route path={"/addMedicalRecord/:idUser"} element ={<AddMedicalRecord/>}/>
         <Route path={"/ambulance"} element={  <AmbulanceServiceP /> } />
         <Route path={"/profile"} element={<Profile/>}/>
+        <Route path={"/Appointment/:idUser"} element={<BookAppointment />} />
+        <Route path="/room/:roomId" element={<RoomPage />}/>
+        <Route path='/pharmacy' element={<GestionPharmacie />} />
+				<Route path='/pharmacy/:id' element={<PharmacyDetails />} />
         <Route path="*" element={<NotFound />} />
         
       </Routes>
+      <Footer/>
     </div>
   );
 }

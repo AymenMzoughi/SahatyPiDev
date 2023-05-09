@@ -9,8 +9,10 @@ const uri = process.env.DB_URI;
 const userRouter = require("./routes/user");
 const ambulanceRouter = require("./routes/ambulance");
 const medicalRecordRouter = require("./routes/medicalRecord");
-const adminRouter = require("./routes/admin");
 const doctorRouter = require("./routes/doctor");
+const appointmentRouter = require("./routes/appointment");
+const PharmacyRouter = require('./routes/pharmacy');
+const MedRouter = require('./routes/med');
 mongoose.set("strictQuery", false);
 mongoose.connect(uri, {
   useNewUrlParser: true,
@@ -38,13 +40,13 @@ app.get('/uploads/', function (req, res) {
   res.sendFile(imagePath);
 });
 app.use(express.json());
-
 app.use("/user", userRouter);
-app.use("/admin", adminRouter);
 app.use("/ambulance", ambulanceRouter);
 app.use("/medicalRecord", medicalRecordRouter);
 app.use("/doctor", doctorRouter);
-
+app.use("/appointment",appointmentRouter);
+app.use('/pharmacy', PharmacyRouter);
+app.use('/med', MedRouter);
 app.listen(port, () => {
   console.log("server is running on port 5000");
 });

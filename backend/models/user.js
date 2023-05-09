@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+ 
   firstname: {
     type: String,
     required: true,
@@ -31,18 +32,54 @@ const userSchema = new Schema({
     required: true,
     minlength: 8,
   },
+  website: {
+    type: String,
+    required: false,
+  },
+  address: {
+    type: String,
+    required: false,
+  },
+  specialization: {
+    type: String,
+    required: false,
+  },
+  experience: {
+    type: String,
+    required: false,
+  },
+  feePerCunsultation: {
+    type: Number,
+    required: false,
+  },
+  timings: {
+    type: Array,
+    required: false,
+  },
+  status: {
+    type: String,
+    default: "pending",
+  },
+
+
   resetToken: { type: String },
-  seenNotifications: {
+
+   seenNotifications: {
+     required: false,
+     type: Array,
+     default: [],
+   },
+   unseenNotifications: {
     required: false,
     type: Array,
     default: [],
-  },
-  unseenNotifications: {
-    required: false,
-    type: Array,
-    default: [],
-  },
-});
+   },
+},
+{
+  timestamps: true,
+},
+  
+);
 
 //Sign up static method
 userSchema.statics.signUp = async function (reqBody) {

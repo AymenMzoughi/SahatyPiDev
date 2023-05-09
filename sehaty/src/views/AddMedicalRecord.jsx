@@ -213,7 +213,7 @@ const AddMedicalRecordForm = () => {
               ))}
 
               <Button type="button" onClick={handleAddTreatments}>
-                Add Medication
+                Add Treatment
               </Button>
 
             </Card.Body>
@@ -247,7 +247,7 @@ const AddMedicalRecordForm = () => {
               ))}
 
               <Button type="button" onClick={handleAddAllergies}>
-                Add Medication
+                Add Allergy
               </Button>
 
             </Card.Body>
@@ -275,7 +275,7 @@ const AddMedicalRecordForm = () => {
               ))}
 
               <Button type="button" onClick={handleAddPrescriptions}>
-                Add Medication
+                Add Prescription
               </Button>
 
             </Card.Body>

@@ -6,6 +6,23 @@ const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const jwt = require('jsonwebtoken');
 
+const getAllDoctors = async (req, res) => {
+  try {
+    const {role}=req.params
+    const doctors = await UserModel.find({role});
+  
+     
+      res.json(doctors)
+    
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: "Error applying doctor account",
+      success: false,
+      error,
+    });
+  }
+};
 
 //Login
 const loginUser = async (req, res, next) => {
@@ -245,43 +262,10 @@ const deleteClaim = async (req, res) => {
     res.status(500).json({ error: "Server Error" });
   }
 };
-const bookAppointment = async (req, res) => {
-  try {
-    const doctors = await Doctor.find(
-      { status: "approved" },
-      "firstName lastName"
-    );
-    req.body.status = "pending";
-    // req.body.date = moment(req.body.date, "DD-MM-YYYY").toISOString();
-    // req.body.time = moment(req.body.time, "HH:mm").toISOString();
-    const newAppointment = new Appointment(req.body);
-    await newAppointment.save();
-    // const user = await UserModel.findOne({ _id: req.body.doctorInfo });
-    // user.unseenNotifications.push({
-    //   type: "new-appointment-request",
-    //   message: `A new appointment request has been made by ${req.body.doctorInfo}`,
-    //   onClickPath: "/doctor/appointments",
-    // });
-    // await user.save();
-    res.status(200).send({
-      message: "Approved doctors fetched successfully",
-      message: "Appointment booked successfully",
-      success: true,
-      data: doctors,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      message: "Error fetching approved doctors",
-      message: "Error booking appointment",
-      success: false,
-      error,
-    });
-  }
-};
+
+
 
 module.exports = {
-  bookAppointment,
   updateClaim,
   deleteClaim,
   addClaim,
@@ -292,4 +276,5 @@ module.exports = {
   editUser,
   reset,
   forget,
+  getAllDoctors,
 };
