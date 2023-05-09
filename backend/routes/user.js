@@ -29,9 +29,9 @@ router.post("/forgetpassword", userController.forget);
 router.post("/resetpassword", userController.reset);
 router.get("/getAllDoctors/:role", userController.getAllDoctors);
 // Protected route
-router.use(requireAuth);
-router.get("/login", userController.getUser);
-router.put("/login", userController.editUser);
+// router.use(requireAuth);
+router.get("/profile/:idUser", userController.getUser);
+router.put("/edit/:idUser", userController.editUser);
 router.post("/addClaim", userController.addClaim);
 router.post("/updateClaim/:claimId", userController.updateClaim);
 router.delete("/deleteClaim/:claimId", userController.deleteClaim);

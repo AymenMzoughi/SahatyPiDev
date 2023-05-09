@@ -126,7 +126,7 @@ const MedicalRecords = () => {
         console.log("test", userId)
         const fetchMedicalRecord = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/MedicalRecord/myMedicalRec/${userId}`);
+                const response = await axios.get(`http://localhost:5000/medicalRecord/myMedicalRec/${userId}`);
                 const fetchedMedicalRecord = response.data;
                 setMedicalRecord(fetchedMedicalRecord);
             } catch (error) {

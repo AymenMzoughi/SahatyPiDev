@@ -1,6 +1,5 @@
 let UserModel = require("../models/user");
 let Claim = require("../models/claim");
-let Doctor = require("../models/doctor");
 let Appointment = require("../models/appointment");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
@@ -74,22 +73,53 @@ const signUpUser = async (req, res) => {
   }
 };
 //Edit
-const editUser = (req, res) => {
-  UserModel.find({ mail: req.body.mail }, (err, user) => { });
+const editUser = async (req, res) => {
+  const userId  = req.params.idUser;
+  const { twitter, instagram, facebook, website, numero, feePerCunsultation,experience,address,mail,specialization } = req.body;
+  try {
+    const user = await UserModel.findOneAndUpdate(
+      { _id: userId },
+      { $set: {
+          mail: mail,
+          twitter: twitter,
+          instagram: instagram,
+          facebook: facebook,
+          website: website,
+          numero: numero,
+          feePerCunsultation: feePerCunsultation,
+          experience: experience,
+          address: address,
+          specialization,
+      }},
+      { new: true }
+    );
+    res.status(200).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
-//Get
-const getUser = (req, res) => {
-  UserModel.findById(req.userId)
-    .then((data) => {
-      res.json(data);
-    })
-    .catch((err) => res.status(400).json(err));
-};
-//GetAll
-// const getAllUsers=(req,res)=>{
-//     UserModel.find().then((data)=>res.json(data)).catch(err=>res.status(400).json(err))
 
-// }
+
+//Get
+const getUser = async (req, res) => {
+  try {
+    const {userId}=req.params
+    const profile = await UserModel.findOne({userId});
+  
+     
+      res.json(profile)
+   
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: "Error applying doctor account",
+      success: false,
+      error,
+    });
+  }
+};
+
 //ADD
 const addUser = (req, res) => {
   const newUser = new UserModel(req.body);

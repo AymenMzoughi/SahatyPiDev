@@ -5,39 +5,7 @@ const moment = require("moment");
 const Appointment = require("../models/appointment");
 const User = require("../models/user");
 const { error } = require('winston');
-
-
-// const bookAppointment= async (req, res) => {
-//   try {
-
-//     req.body.type;
-//     req.body.date = moment(req.body.date, "DD-MM-YYYY").toISOString();
-//     req.body.time = moment(req.body.time, "HH:mm").toISOString();
-//     const newAppointment = new Appointment(req.body);
-//     await newAppointment.save();
-//     const user = await User.findOne({ _id: req.body.userId });
-//     user.unseenNotifications.push({
-//       type: "new-appointment-request",
-//       message: `A new appointment request has been made by ${user.firstname} ${user.lastname}`,
-//       onClickPath: "/doctor/appointments",
-//     });
-//     await user.save();
-//     res.status(200).send({
-//       message: "Appointment booked successfully",
-//       success: true,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send({
-//       message: "Error booking appointment",
-//       success: false,
-//       error,
-//     });
-//   }
-// };
-
-
-
+const nodemailer = require('nodemailer');
 
 
 const cancelAppointment = async (req, res) => {
@@ -167,23 +135,114 @@ const bookAppointment = async (req, res) => {
 
 
 
-const getAppointmentId= async (req, res) => {
+const getAppointments = async (req, res) => {
   try {
-    const appointments = await Appointment.find({ userId: req.body.userId });
-    res.status(200).send({
-      message: "Appointments fetched successfully",
-      success: true,
-      data: appointments,
-    });
+    const userId = req.params.idUser;
+    const status = "pending"
+    console.log(userId);
+    const appointments = await Appointment.find({ userId,status })
+      .select('-doctorId')
+      .populate('userId','firstname lastname')
+      .lean()
+      .exec();
+
+    if (!appointments) {
+      return res.status(404).json({ message: 'No Appoints found at the moment' });
+    }
+
+    const appointmentData = appointments.map((appointment) => ({
+      patientname: `${appointment.userId.firstname} ${appointment.userId.lastname}`,
+      date: `${appointment.date} at ${appointment.time}`,
+      type: `${appointment.type}`,
+      status: `${appointment.status}`,
+      id: `${appointment._id}`
+    }));
+console.log(appointmentData)
+    res.json(appointmentData);
   } catch (error) {
     console.log(error);
     res.status(500).send({
-      message: "Error fetching appointments",
+      error,
+    });
+  }
+};
+
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: "getawayvoy.services@gmail.com",
+    pass: "byoxgpbbfanfopju",
+  },
+});
+const sendMail = async (to, subject, html) => {
+  const mailOptions = {
+    from: 'getawayvoy.services@gmail.com',
+    to,
+    subject,
+    html,
+  };
+  await transporter.sendMail(mailOptions);
+};
+
+const changeAppointmentStatus = async (req, res) => {
+
+  try {
+    const {userId} = req.params
+    const isDoctor = await User.findOne(userId)
+    
+  
+    if ( isDoctor.role != "Docteur") {
+      return res.status(403).json({ error: 'Unauthorized' });
+    } else {
+      const {appointmentId} = req.body;
+      const status="approved"
+      console.log(appointmentId)
+      
+      const appointment = await Appointment.findByIdAndUpdate(appointmentId, {
+        status,
+      });
+    
+      if (appointment.type=="online"){
+        const email=isDoctor.mail;
+        const maxValue=10000;
+        let randomInt = Math.floor(Math.random() * maxValue);
+       
+        const patientId=appointment.userId;
+        console.log(patientId)
+        const emailP=await User.findOne(patientId)
+        console.log(emailP.mail)
+        const rcpt=[emailP.mail,email]
+        const subject = 'Room Number';
+        const html = `Your room number is ,${randomInt}`;
+        await sendMail(rcpt, subject, html);
+      }
+
+      const user = await User.findOne({ _id: appointment.userId });
+      const unseenNotifications = user.unseenNotifications;
+      unseenNotifications.push({
+        type: "appointment-status-changed",
+        message: `Your appointment status has been changed to ${status}`,
+        onClickPath: "/appointments",
+      });
+
+      await user.save();
+
+      res.status(200).send({
+        message: "Appointment status updated successfully",
+        success: true,
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      message: "Error changing appointment status",
       success: false,
       error,
     });
   }
 };
+
+
 const notificationsAsSeen=async (req, res) => {
 
   try {
@@ -237,8 +296,10 @@ const deleteAllNotifications= async (req, res) => {
 module.exports={
   bookAppointment,
   checkBookingAvilability,
-  getAppointmentId,
+  getAppointments,
   notificationsAsSeen,
   deleteAllNotifications,
-  cancelAppointment
+  cancelAppointment,
+  changeAppointmentStatus,
+
 }

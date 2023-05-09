@@ -12,14 +12,14 @@ import NotFound from "./views/NotFound";
 import ForgotPassword from "./components/ForgetPassword";
 import ResetPassword from "./components/ResetPassword";
 import BookAppointment from "./components/BookAppointment";
-import MedicalRecords from "./views/showMedicalRecordPatient.jsx";
+import MedicalRecords from "./views/showMedicalRecordPatient";
 import MedicalRecordsD from "./views/showMedicalRecordDoctor";
 import AmbulanceServiceP from "./components/ambulancePatient";
 import PatientListDocteur from "./views/PatientList";
 import AddMedicalRecord from "./views/AddMedicalRecord";
 import GestionPharmacie from './components/GestionPharmacie';
 import PharmacyDetails from './components/PharmacyDetails';
-import Profile from "./views/Profile"
+import ProfileP from "./views/Profile"
 import RoomPage from "./room";
 function App() {
   return (
@@ -40,7 +40,7 @@ function App() {
         <Route path={"/patientlist/:idUser"} element={<PatientListDocteur/>}/>
         <Route path={"/addMedicalRecord/:idUser"} element ={<AddMedicalRecord/>}/>
         <Route path={"/ambulance"} element={  <AmbulanceServiceP /> } />
-        <Route path={"/profile"} element={<Profile/>}/>
+        <Route path={"/profile"} element={<ProfileP/>}/>
         <Route path={"/Appointment/:idUser"} element={<BookAppointment />} />
         <Route path="/room/:roomId" element={<RoomPage />}/>
         <Route path='/pharmacy' element={<GestionPharmacie />} />

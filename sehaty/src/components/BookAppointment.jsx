@@ -88,7 +88,7 @@ const [appointment, setAppointment] = useState({
           />  
 
       </Card.Body>
-      <button  style={{marginTop: '50px'}} type="submit" className="btn btn-primary mx-auto d-block" >Book Appointement</button>
+      <button  style={{marginTop: '50px'}} type="submit" c   >Book Appointement</button>
     </Card>
     </Form>
 

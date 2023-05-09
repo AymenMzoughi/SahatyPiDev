@@ -7,58 +7,66 @@ const userSchema = new Schema({
  
   firstname: {
     type: String,
-    required: true,
+
   },
   lastname: {
     type: String,
-    require: true,
+
   },
   numero: {
     type: Number,
-    require: true,
+
   },
   pdp: {
     type: String,
-    require: true,
+
   },
   mail: {
     type: String,
-    required: true,
-    unique: true,
+
+    
   },
-  role: { type: String },
+  role: { type: String, required:true,},
   password: {
     type: String,
-    required: true,
-    minlength: 8,
+
   },
   website: {
     type: String,
-    required: false,
+
   },
   address: {
     type: String,
-    required: false,
+
   },
   specialization: {
     type: String,
-    required: false,
+
   },
   experience: {
     type: String,
-    required: false,
+
   },
   feePerCunsultation: {
     type: Number,
-    required: false,
+
   },
   timings: {
     type: Array,
-    required: false,
+
   },
   status: {
     type: String,
     default: "pending",
+  },
+  instagram: {
+    type: String,
+  },
+  facebook: {
+    type: String,
+  },
+  twitter: {
+    type: String,
   },
 
 
