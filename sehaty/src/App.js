@@ -22,7 +22,7 @@ function App() {
 
   return (
     <div className="App">
-      {location.pathname === '/dash' || location.pathname==='/dash/addTip' || location.pathname==='/dash/ListTip' ? null : <NavBar />}
+      {location.pathname === '/dash' || location.pathname==='/dash/addTip' || location.pathname==='/dash/ListTip'|| location.pathname==='/dash/ambulance' || location.pathname==='/dash/hospital'|| location.pathname==='/dash/ListTip'|| location.pathname==='/dash/ambulance' || location.pathname==='/dash/medicalrecord'? null : <NavBar />}
       <Routes>
         <Route path="/Appointment" element={<BookAppointment />} />
         <Route path="/contact" element={<Contact />} />

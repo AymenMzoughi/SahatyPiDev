@@ -14,6 +14,8 @@ const adminRouter = require("./routes/admin");
 const doctorRouter = require("./routes/doctor");
 const tipsRouter = require("./routes/tips");
 const messageRoutes = require("./routes/messages");
+const hospitalRouter = require("./routes/Controller");
+
 
 mongoose.set("strictQuery", false);
 mongoose.connect(uri, {
@@ -38,6 +40,8 @@ app.use("/medicalRecord", medicalRecordRouter);
 app.use("/doctor", doctorRouter);
 app.use("/tip", tipsRouter);
 app.use("/api/messages", messageRoutes);
+app.use("/hospital", hospitalRouter);
+
 app.post("/payment", cors(), async (req, res) => {
 	let { amount, id } = req.body
 	try {

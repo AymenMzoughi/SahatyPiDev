@@ -40,7 +40,7 @@ function NavBar() {
                   <NavDropdown title={page} key={page}>
                     <NavDropdown.Item href="../MedicalTips/ListTip">ListTip</NavDropdown.Item>
                     <NavDropdown.Item href="../MedicalTips/search">Search</NavDropdown.Item>
-                    <NavDropdown.Item href="../payment">VideoPlayer</NavDropdown.Item>
+                    <NavDropdown.Item href="../payment">Chat Video</NavDropdown.Item>
                   </NavDropdown>
                 );
               } else {

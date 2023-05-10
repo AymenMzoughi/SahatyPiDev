@@ -79,10 +79,25 @@ const unreserveAmbulance = async (req, res, next) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+const deleteAmbulance = async (req, res, next) => {
+  try {
+    const ambulanceToDelete = await Ambulance.findById(req.params.id, 'name');
+    if (!ambulanceToDelete) {
+      return res.status(404).json({ message: ERROR_MESSAGES.USER_NOT_FOUND });
+    }
+    await Ambulance.findByIdAndDelete(req.params.id);
+    const docs = await Ambulance.find({});
+    res.status(200).json({ message: `Ambulance ${ambulanceToDelete.NAME} is deleted!`, docs });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: ERROR_MESSAGES.INTERNAL_SERVER_ERROR });
+  }
+};
 
 module.exports = {
   getAmbulances,
   addAmbulance,
   reserveAmbulance,
   unreserveAmbulance,
+  deleteAmbulance
 };
