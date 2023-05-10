@@ -40,6 +40,7 @@ const AccountCollapse = () => {
             dispatch(AuthActions.logout(token));
             navigate('/home')
             localStorage.removeItem("token")
+            
           }}
         >
           Logout

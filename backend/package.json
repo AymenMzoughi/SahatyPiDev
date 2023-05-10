@@ -38,6 +38,7 @@
     "react-leaflet": "^4.2.1",
     "react-pdf": "^6.2.2",
     "socket.io": "^4.6.1",
+    "stripe": "^12.4.0",
     "twilio": "^4.10.0",
     "winston": "^3.8.2",
     "winston-mongodb": "^5.1.1"

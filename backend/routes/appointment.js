@@ -9,8 +9,9 @@ const router = require("express").Router();
 router.post( "/checkBookingAvilability", appointmentController.checkBookingAvilability);
 router.put("/approve/:idUser", appointmentController.changeAppointmentStatus)
  router.post( "/bookAppointment",  appointmentController.bookAppointment);
-router.delete("/cancelAppointment", appointmentController.cancelAppointment)
+router.put("/cancel", appointmentController.cancelAppointment)
  router.get("/getAppointments/:idUser",  appointmentController.getAppointments);
+ router.get("/getAppointmentsForPatient/:idUser",appointmentController.getAppointmentsForPatient)
  router.post("/notificationsAsSeen" ,appointmentController.notificationsAsSeen);
  router.post("/deleteAllNotifications", appointmentController.deleteAllNotifications);
 

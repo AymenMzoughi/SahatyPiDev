@@ -72,16 +72,14 @@ const userSchema = new Schema({
 
   resetToken: { type: String },
 
-   seenNotifications: {
-     required: false,
-     type: Array,
-     default: [],
-   },
-   unseenNotifications: {
-    required: false,
+  seenNotifications: {
     type: Array,
     default: [],
-   },
+  },
+  unseenNotifications: {
+    type: Array,
+    default: [],
+  },
 },
 {
   timestamps: true,

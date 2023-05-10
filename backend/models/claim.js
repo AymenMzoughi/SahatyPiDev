@@ -4,22 +4,18 @@ const claimSchema = new mongoose.Schema(
   {
     doctorName: {
       type: String,
-      required: false,
     },
-    subject: {
-      type: String,
-      required: false,
-    },
+
     description: {
       type: String,
-      required: true,
+
     },
     userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     status: {
       type: String,
       enum: ["pending", "processed", "rejected"],
       default: "pending",
-      required: true,
+
     },
   },
   {

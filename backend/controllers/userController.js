@@ -1,9 +1,9 @@
-let UserModel = require("../models/user");
-let Claim = require("../models/claim");
-let Appointment = require("../models/appointment");
+const Appointment = require("../models/appointment");
+const UserModel = require("../models/user");
 const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const jwt = require('jsonwebtoken');
+const multer = require('multer');
 
 const getAllDoctors = async (req, res) => {
   try {
@@ -72,6 +72,8 @@ const signUpUser = async (req, res) => {
     res.status(400).json(error.message);
   }
 };
+
+
 //Edit
 const editUser = async (req, res) => {
   const userId  = req.params.idUser;
@@ -245,60 +247,57 @@ const reset = async (req, res, next) => {
   }
 };
 
+const notificationsAsSeen =async (req, res) => {
 
-
-const addClaim = async (req, res) => {
   try {
-    const { doctorName, description, subject, userId } = req.body;
-    const claim = new Claim({
-      userId,
-      subject,
-      doctorName,
-      description,
-      status: "pending",
+    const user = await UserModel.findOne({ _id: req.body.userId });
+    const unseenNotifications = user.unseenNotifications;
+    const seenNotifications = user.seenNotifications;
+    seenNotifications.push(...unseenNotifications);
+    user.unseenNotifications = [];
+    user.seenNotifications = seenNotifications;
+    const updatedUser = await user.save();
+    res.status(200).send({
+      success: true,
+      message: "All notifications marked as seen",
+      data: updatedUser,
     });
-    const result = await claim.save();
-    res.status(201).json(result);
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Server Error" });
+    res.status(500).send({
+      message: "Error applying doctor account",
+      success: false,
+      error,
+    });
   }
-};
+}
+;
 
-//update claim
-
-const updateClaim = async (req, res) => {
+const deleteAllNotifications= async (req, res) => {
   try {
-    const claimId = req.params.claimId;
-    const { doctorName, description, date } = req.body;
-    const updatedClaim = await Claim.findByIdAndUpdate(
-      claimId,
-      { doctorName, description, date },
-      { new: true }
-    );
-    res.json(updatedClaim);
+    const user = await User.findOne({ _id: req.body.userId });
+    user.seenNotifications = [];
+    user.unseenNotifications = [];
+    const updatedUser = await user.save();
+    updatedUser.password = undefined;
+    res.status(200).send({
+      success: true,
+      message: "All notifications cleared",
+      data: updatedUser,
+    });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: "Server Error" });
+    res.status(500).send({
+      message: "Error applying doctor account",
+      success: false,
+      error,
+    });
   }
 };
-const deleteClaim = async (req, res) => {
-  try {
-    const claimId = req.params.claimId;
-    await Claim.findByIdAndDelete(claimId);
-    res.json({ message: "Claim deleted successfully" });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Server Error" });
-  }
-};
-
 
 
 module.exports = {
-  updateClaim,
-  deleteClaim,
-  addClaim,
+  notificationsAsSeen,
   signUpUser,
   addUser,
   loginUser,

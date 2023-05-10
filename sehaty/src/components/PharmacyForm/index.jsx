@@ -12,12 +12,12 @@ export default function PharamacyForm( {
 }) {
 	return (
 		<div
-			className='modal fade'
-			id='pharmacyModal'
-			tabIndex={-1}
-			aria-labelledby='pharmacyModal'
-			aria-hidden='true'
-			data-bs-backdrop='static'
+			// className='modal fade'
+			// id='pharmacyModal'
+			// tabIndex={-1}
+			// aria-labelledby='pharmacyModal'
+			// aria-hidden='true'
+			// data-bs-backdrop='static'
 		>
 			<div className='modal-dialog'>
 				<div className='modal-content'>

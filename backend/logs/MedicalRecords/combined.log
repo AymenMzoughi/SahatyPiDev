@@ -68,3 +68,4 @@
 {"doctorId":"641088068b3ddbc8790c0abf","level":"info","message":"Treatment deleted successfully","timestamp":"2023-05-07T17:27:29.136Z","treatmentId":"6457d2a20909b68ef30ecb51"}
 {"doctorId":"641088068b3ddbc8790c0abf","level":"info","medicationId":"6457d7b70909b68ef30ecbbb","message":"Medication deleted successfully","timestamp":"2023-05-07T17:27:31.698Z"}
 {"doctorId":"641088068b3ddbc8790c0abf","level":"info","medicationId":"6457d7a70909b68ef30ecbad","message":"Medication deleted successfully","timestamp":"2023-05-07T17:27:33.951Z"}
+{"doctorId":"641088068b3ddbc8790c0abf","level":"warn","message":"The specified doctor tried to delete the treatment","timestamp":"2023-05-10T18:04:49.534Z","treatmentId":"6445c05aa472dbd49a199782"}

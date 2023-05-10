@@ -16,6 +16,7 @@ const authSlice = createSlice({
         logout(state) {
             state.isLoggedIn = false;
             state.role = null;
+            localStorage.removeItem('user');
         },
     },
 });
@@ -25,11 +26,12 @@ export const AuthActions = authSlice.actions;
 export const initializeStore = () => {
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem("user"));
-    const userRole = user.role;
+    const userRole = user?.role || null;
+    const isLoggedIn = token ? true : false;
     const preloadedState = {
         auth: {
-            isLoggedIn: token ? true : false,
-            role: userRole || null,
+            isLoggedIn,
+            role: userRole,
         },
     };
 
@@ -40,5 +42,6 @@ export const initializeStore = () => {
         preloadedState,
     });
 };
+
 
 export const store = initializeStore();

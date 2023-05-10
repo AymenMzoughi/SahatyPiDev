@@ -1,8 +1,10 @@
 const express = require("express");
 require("dotenv").config();
 const app = express();
-app.use(express.static('uploads'));
+// app.use(express.static('uploads'));
+app.use(express.static('public'));
 const cors = require('cors');
+const stripe = require('stripe')('sk_test_51N30ouCsHIHt4OWhGtaZascVCW49qHBK21UCkoaf2Hnkf61DKIFIiVPxxcxJgOc6kTkeiaUGj5ob8dq2KhSosvXK004zTJYdbJ');
 const mongoose = require("mongoose");
 const port = process.env.PORT || 5000;
 const uri = process.env.DB_URI;
@@ -12,6 +14,9 @@ const medicalRecordRouter = require("./routes/medicalRecord");
 const appointmentRouter = require("./routes/appointment");
 const PharmacyRouter = require('./routes/pharmacy');
 const MedRouter = require('./routes/med');
+const ClaimRouter = require('./routes/claim')
+const tipsRouter = require("./routes/tips");
+const hospitalRouter = require("./routes/hospital");
 mongoose.set("strictQuery", false);
 mongoose.connect(uri, {
   useNewUrlParser: true,
@@ -45,6 +50,33 @@ app.use("/medicalRecord", medicalRecordRouter);
 app.use("/appointment",appointmentRouter);
 app.use('/pharmacy', PharmacyRouter);
 app.use('/med', MedRouter);
+app.use('/claim', ClaimRouter)
+app.use("/tip", tipsRouter);
+app.use("/hospital", hospitalRouter);
+
+app.post("/payment", cors(), async (req, res) => {
+	let { amount, id } = req.body
+	try {
+		const payment = await stripe.paymentIntents.create({
+			amount,
+			currency: "USD",
+			description: "Chat Video Sehaty",
+			payment_method: id,
+			confirm: true
+		})
+		console.log("Payment", payment)
+		res.json({
+			message: "Payment successful",
+			success: true
+		})
+	} catch (error) {
+		console.log("Error", error)
+		res.json({
+			message: "Payment failed",
+			success: false
+		})
+	}
+})
 app.listen(port, () => {
   console.log("server is running on port 5000");
 });

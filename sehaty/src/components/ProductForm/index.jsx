@@ -16,12 +16,12 @@ export default function ProductForm( {
 }) {
 	return (
 		<div
-			className='modal fade'
-			id={`med${modalType}Modal`}
-			tabIndex={-1}
-			aria-labelledby={`med${modalType}Modal`}
-			aria-hidden='true'
-			data-bs-backdrop='static'
+			// className='modal fade'
+			// id={`med${modalType}Modal`}
+			// tabIndex={-1}
+			// aria-labelledby={`med${modalType}Modal`}
+			// aria-hidden='true'
+			// data-bs-backdrop='static'
 		>
 			<div className='modal-dialog'>
 				<div className='modal-content'>

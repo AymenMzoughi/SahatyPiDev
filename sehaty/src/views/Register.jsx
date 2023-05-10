@@ -1,6 +1,6 @@
 import { Col, Container, Form, Row } from "react-bootstrap";
 import { HeroTitle, MainButton, Section } from "../components/StyledComponents";
-import image from "../assets/med.jpg";
+import image from "../assets/Daco_4272495.png";
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -11,21 +11,11 @@ const Register = () => {
     lastname: "",
     numero: "",
     role: "",
-    pdp:"",
     mail: "",
     password: "",
     passwordConfirm: "",
   });
 
-  const handleImageChange = (event) => {
-    const selectedFile = event.target.files[0];
-    
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      pdp: "uploads/" +selectedFile.name,
-    }));
-    console.log(selectedFile.name)
-  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -99,9 +89,7 @@ const Register = () => {
                   onChange={handleChange}
                 />
               </Form.Group>
-              <Form.Group>
-              <Form.Control type="file" className="form-control-file" id="images" multipleaccept="image/*" onChange={handleImageChange} />
-              </Form.Group>
+
               <Form.Group controlId="formBasicPhoneNumber">
                 <Form.Label>Numero</Form.Label>
                 <Form.Control

@@ -43,11 +43,15 @@ const Login = () => {
       const response = await axios.post("http://localhost:5000/user/login", { mail: inputs.mail, password: inputs.password });
       const token = response.data.user.token;
       const user = response.data.user
-
+      console.log(user.role)
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", token);
-
+      if(user.role == "Pharmacist"){
+        history('/pharmacy')
+      }
+      else{
       history('/profile')
+      }
       window.location.reload()
       dispatch(AuthActions.login(token));
 

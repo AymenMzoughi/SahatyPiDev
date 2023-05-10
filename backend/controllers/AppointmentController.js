@@ -10,9 +10,10 @@ const nodemailer = require('nodemailer');
 
 const cancelAppointment = async (req, res) => {
   try {
-    const appointment = await Appointment.findById({ userId: req.body.userId });
+    const { appointmentId } = req.body;
+    const appointment = await Appointment.findById(appointmentId);
     if (!appointment) {
-      
+
       return res.status(404).send({
         message: "Appointment not found",
         success: false,
@@ -24,9 +25,9 @@ const cancelAppointment = async (req, res) => {
         message: "Appointment cannot be canceled",
         success: false,
       });
-  
+
     }
-   
+
     appointment.status = "canceled";
     await appointment.save();
 
@@ -52,7 +53,7 @@ const cancelAppointment = async (req, res) => {
   }
 };
 
-const checkBookingAvilability= async (req, res) => {
+const checkBookingAvilability = async (req, res) => {
   try {
     const date = moment(req.body.date, "DD-MM-YYYY").toISOString();
     const fromTime = moment(req.body.time, "HH:mm")
@@ -107,22 +108,22 @@ const bookAppointment = async (req, res) => {
     }
     else {
 
-    req.body.date = moment(req.body.date, "DD-MM-YYYY").toISOString();
-    req.body.time = moment(req.body.time, "HH:mm").toISOString();
-    const newAppointment = new Appointment(req.body);
-    await newAppointment.save();
-    const user = await User.findOne({ _id: req.body.userId });
-    user.unseenNotifications.push({
-      type: "new-appointment-request",
-      message: `A new appointment request has been made by ${user.firstname} ${user.lastname}`,
-      onClickPath: "/doctor/appointments",
-    });
-    await user.save();
-    res.status(200).send({
-      message: "Appointment booked successfully",
-      success: true,
-    });
-  }
+      req.body.date = moment(req.body.date, "DD-MM-YYYY").toISOString();
+      req.body.time = moment(req.body.time, "HH:mm").toISOString();
+      const newAppointment = new Appointment(req.body);
+      await newAppointment.save();
+      const user = await User.findOne({ _id: req.body.userId });
+      user.unseenNotifications.push({
+        type: "new-appointment-request",
+        message: `A new appointment request has been made by ${user.firstname} ${user.lastname}`,
+        onClickPath: "/doctor/appointments",
+      });
+      await user.save();
+      res.status(200).send({
+        message: "Appointment booked successfully",
+        success: true,
+      });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -140,9 +141,9 @@ const getAppointments = async (req, res) => {
     const userId = req.params.idUser;
     const status = "pending"
     console.log(userId);
-    const appointments = await Appointment.find({ userId,status })
+    const appointments = await Appointment.find({ userId, status })
       .select('-doctorId')
-      .populate('userId','firstname lastname')
+      .populate('userId', 'firstname lastname')
       .lean()
       .exec();
 
@@ -157,7 +158,7 @@ const getAppointments = async (req, res) => {
       status: `${appointment.status}`,
       id: `${appointment._id}`
     }));
-console.log(appointmentData)
+    console.log(appointmentData)
     res.json(appointmentData);
   } catch (error) {
     console.log(error);
@@ -166,6 +167,44 @@ console.log(appointmentData)
     });
   }
 };
+
+const getAppointmentsForPatient = async (req, res) => {
+  try {
+    const userId = req.params.idUser;
+    const status = "pending";
+    console.log(userId);
+    const appointments = await Appointment.find({ userId, status })
+      .select('')
+      .populate({
+        path: 'doctorId',
+        select: 'firstname lastname -_id',
+      })
+      .lean()
+      .exec();
+
+
+    if (!appointments) {
+      return res.status(404).json({ message: 'No Appoints found at the moment' });
+    }
+
+    const appointmentData = appointments.map((appointment) => ({
+      date: `${appointment.date} at ${appointment.time}`,
+      type: `${appointment.type}`,
+      status: `${appointment.status}`,
+      test: `${appointment.doctorId.firstname} ${appointment.doctorId.lastname}`,
+      id: `${appointment._id}`
+    }));
+
+    console.log(appointmentData);
+    res.json(appointmentData);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      error,
+    });
+  }
+};
+
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -187,31 +226,31 @@ const sendMail = async (to, subject, html) => {
 const changeAppointmentStatus = async (req, res) => {
 
   try {
-    const {userId} = req.params
+    const { userId } = req.params
     const isDoctor = await User.findOne(userId)
-    
-  
-    if ( isDoctor.role != "Docteur") {
+
+
+    if (isDoctor.role != "Docteur") {
       return res.status(403).json({ error: 'Unauthorized' });
     } else {
-      const {appointmentId} = req.body;
-      const status="approved"
+      const { appointmentId } = req.body;
+      const status = "approved"
       console.log(appointmentId)
-      
+
       const appointment = await Appointment.findByIdAndUpdate(appointmentId, {
         status,
       });
-    
-      if (appointment.type=="online"){
-        const email=isDoctor.mail;
-        const maxValue=10000;
+
+      if (appointment.type == "online") {
+        const email = isDoctor.mail;
+        const maxValue = 10000;
         let randomInt = Math.floor(Math.random() * maxValue);
-       
-        const patientId=appointment.userId;
+
+        const patientId = appointment.userId;
         console.log(patientId)
-        const emailP=await User.findOne(patientId)
+        const emailP = await User.findOne(patientId)
         console.log(emailP.mail)
-        const rcpt=[emailP.mail,email]
+        const rcpt = [emailP.mail, email]
         const subject = 'Room Number';
         const html = `Your room number is ,${randomInt}`;
         await sendMail(rcpt, subject, html);
@@ -243,7 +282,7 @@ const changeAppointmentStatus = async (req, res) => {
 };
 
 
-const notificationsAsSeen=async (req, res) => {
+const notificationsAsSeen = async (req, res) => {
 
   try {
     const user = await User.findOne({ _id: req.body.userId });
@@ -268,8 +307,8 @@ const notificationsAsSeen=async (req, res) => {
     });
   }
 }
-;
-const deleteAllNotifications= async (req, res) => {
+  ;
+const deleteAllNotifications = async (req, res) => {
   try {
     const user = await User.findOne({ _id: req.body.userId });
     user.seenNotifications = [];
@@ -293,7 +332,7 @@ const deleteAllNotifications= async (req, res) => {
 
 
 
-module.exports={
+module.exports = {
   bookAppointment,
   checkBookingAvilability,
   getAppointments,
@@ -301,5 +340,5 @@ module.exports={
   deleteAllNotifications,
   cancelAppointment,
   changeAppointmentStatus,
-
+  getAppointmentsForPatient,
 }

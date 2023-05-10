@@ -9,7 +9,6 @@ const Landing = () => {
     <div>
       <Hero />
       <Services />
-      <Doctors landing={true} />
       <About />
     </div>
   );

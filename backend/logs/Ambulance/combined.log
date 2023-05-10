@@ -16,3 +16,10 @@
 {"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c unreserved ambulance 6445741d49a75a10b5e5b608","timestamp":"2023-05-08T23:29:15.112Z"}
 {"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c reserved ambulance 6445741849a75a10b5e5b600","timestamp":"2023-05-08T23:59:38.284Z"}
 {"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c unreserved ambulance 6445741849a75a10b5e5b600","timestamp":"2023-05-08T23:59:46.454Z"}
+{"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c reserved ambulance 6445742849a75a10b5e5b618","timestamp":"2023-05-10T09:57:05.143Z"}
+{"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c unreserved ambulance 6445742849a75a10b5e5b618","timestamp":"2023-05-10T09:57:09.886Z"}
+{"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c reserved ambulance 6445740f49a75a10b5e5b5f7","timestamp":"2023-05-10T09:57:12.734Z"}
+{"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c unreserved ambulance 6445740f49a75a10b5e5b5f7","timestamp":"2023-05-10T09:57:46.511Z"}
+{"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c reserved ambulance 6445742349a75a10b5e5b610","timestamp":"2023-05-10T16:15:15.101Z"}
+{"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c unreserved ambulance 6445742349a75a10b5e5b610","timestamp":"2023-05-10T16:15:19.478Z"}
+{"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c reserved ambulance 6445742849a75a10b5e5b618","timestamp":"2023-05-10T18:12:15.382Z"}
