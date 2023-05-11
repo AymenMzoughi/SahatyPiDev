@@ -1,0 +1,87 @@
+/* .ant-tabs ant-tabs-top  ant-tabs-nav-list*/
+.page-noti {
+    color: rgb(0, 139, 21);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    padding: 2.5px;
+    margin-top: -9px;
+    margin-bottom: 15px;
+  }
+  
+  hr.horizontal {
+    border: 5px solid rgb(54, 59, 50);
+    margin-top: -9px;
+    margin-bottom: 20px;
+  }
+  .ant-tabs-nav-list {
+    display: flex;
+    text-transform: capitalize;
+  }
+  .ant-tabs-tab-btn {
+    margin-left: 25px;
+    font-size: 1.6rem;
+    cursor: pointer;
+    margin-right: 25px;
+    font-weight: bold;
+  }
+  
+  .ant-tabs-tab-active {
+    background: rgba(60, 56, 56, 0.822);
+    color: rgb(255, 255, 255);
+    border-radius: 15px;
+  }
+  
+  .ant-tabs-tabpane-hidden {
+    display: none;
+  }
+  .ant-tabs-tabpane-active {
+    margin-left: 19px;
+    font-weight: 600;
+    color: #188914;  
+  }
+  .ant-tabs-tabpane-active h4::before {
+    content: "🫣";
+    padding-right: 10px;
+    margin-left: 20px;
+  }
+  .mark {
+    background: #fff;
+    font-size: 20px;
+    color: rgb(59, 43, 43);
+    margin-top: -2rem;
+  }
+  
+  .mk:hover {
+    color: rgb(41, 173, 27);
+  }
+  .del:hover {
+    color: rgb(255, 0, 0);
+  }
+  
+  .h4all{
+    font-size: 17px;
+    cursor: pointer;
+  }
+  .ant-tabs-tabpane-active h3::before {
+    content: "🤓";
+    padding-right: 10px;
+    margin-left: 20px;
+  }
+  
+  .unMark,.seMark {
+    background: #1D4642;
+    padding: 5px;
+    color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .unMark:hover {
+    background: rgb(29, 202, 29);
+  }
+  .seMark:hover {
+    background: rgb(196, 39, 39);
+  }

@@ -1,111 +1,97 @@
-import { Col, Form, Row } from "react-bootstrap";
-import Select from "react-select";
-import { HeroTitle, MainButton, Section } from "./StyledComponents";
-import { useState } from "react";
-
+import React, { useCallback, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Button, CardGroup, Form, FloatingLabel, Col, Card, Image, Tabs, Tab } from 'react-bootstrap';
+import axios from "axios";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import img from '../assets/book-app-banner-1.jpg'
 const Appointment = () => {
-  const jwtToken = localStorage.getItem("token");
-  const options = [
-    { value: "tbyb", label: "tbyb" },
-    { value: "anouar", label: "Dr Anouar" },
-    { value: "Amine", label: "Dr Amine" },
-    { value: "tbyb1", label: "tbyb1" },
-    { value: "tbyyyb2", label: "tbyyyb2" },
-  ];
-  const [doctor, setDoctor] = useState("");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
+  const path = window.location.pathname;
+    const parts = path.split("/");
+    const doctorId=parts[parts.length - 1]
+    console.log(doctorId)
+    const [doctorList, setDoctorList] = useState([]);
+  const [isAvailable, setIsAvailable] = useState(false);
+  
+  const [date, setDate] = useState();
+  const [time, setTime] = useState();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const [doctor, setDoctor] = useState(null);
+  const params = useParams();
+  const dispatch = useDispatch();
+
+  const [value, setValue] = useState();
+  const navigate = useNavigate();
+
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userId = user._id;
+
+const [appointment, setAppointment] = useState({
+    doctorId:doctorId,
+    userId: userId,
+    type: "",
+    date: "",
+    time: "",
+  });
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setAppointment({ ...appointment, [name]: value });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     try {
-      const response = await fetch(
-        "http://localhost:5000/user/bookAppointment",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwtToken}`,
-          },
-          body: JSON.stringify({
-            userId: "6441341aea4a213e8905b4d2",
-            doctorId: "dr foulen",
-            time,
-            date,
-          }),
-        }
-      );
-      const data = await response.json();
-      if (response.ok) {
-        alert(`Appointment booked successfully ! on ${date} at ${time}`);
-      } else {
-        alert(data);
-      }
+      console.log(appointment)
+      const response = await axios.post("http://localhost:5000/appointment/bookAppointment", appointment);
+      console.log(response.data.message);
+      alert(response.data.message);
+      window.location.reload()
     } catch (error) {
-      alert("sorry we can't proceed your booking , try later");
+      console.log(error.response.data.message);
     }
   };
 
+  const handleInputChangee = (event) => {
+    const { name, value } = event.target;
+    setAppointment({ ...appointment, [name]: value });
+  };
+
   return (
-    <Section>
-      <Row>
-        <Col xs={12} md={6}>
-          <HeroTitle>Book an online Appointement today.</HeroTitle>
-          <p>Choose the time that suits with your preferred doctor</p>
-        </Col>
-      </Row>
-      <Row>
-        <Form onSubmit={handleSubmit}>
-          <Form.Group as={Row}>
-            <Form.Label column sm={2}>
-              Choose your Doctor
-            </Form.Label>
-            <Col sm={10}>
-              <Select
-                value={doctor}
-                onChange={setDoctor}
-                options={options}
-                isClearable={true}
-                placeholder="Select a doctor"
-                isSearchable={true}
-              />
-            </Col>
-          </Form.Group>
+    <Form onSubmit={handleSubmit} className="mx-auto d-block">
+    <Card >
+      <Card.Img variant="top" src={img} />
+      <Card.Body className="mx-auto d-block" >
 
-          <Form.Group as={Row}>
-            <Form.Label column sm={2}>
-              Date
-            </Form.Label>
-            <Col sm={10}>
-              <Form.Control
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-              />
-            </Col>
-          </Form.Group>
+        <Form.Select name="type" value={appointment.type} onChange={handleInputChangee}  style={{ marginLeft: '110px', marginTop: '50px', width: '30rem' }}  >
+          <option>Appointement Method</option>
+          <option value="online">Online</option>
+          <option value="faceToFace">Face to Face</option>
+        </Form.Select>
+        <label htmlFor="time" className='text-info'><h2>Time</h2></label>
+          <input   style={{ marginLeft: '45px', marginTop: '50px', width: '30rem' }}
+            type="time"
+            id="time"
+            name="time"
+            value={appointment.time}
+            onChange={handleInputChange}
+          />
+         <br>
+         </br>
+          <label htmlFor="date" className='text-info'><h2>Date</h2></label>
+          <input   style={{ marginLeft: '45px', marginTop: '50px', width: '30rem' }}
+            type="date"
+            id="date"
+            name="date"
+            value={appointment.date}
+            onChange={handleInputChange}
+          />  
 
-          <Form.Group as={Row}>
-            <Form.Label column sm={2}>
-              Time
-            </Form.Label>
-            <Col sm={10}>
-              <Form.Control
-                type="time"
-                value={time}
-                onChange={(e) => setTime(e.target.value)}
-              />
-            </Col>
-          </Form.Group>
+      </Card.Body>
+      <Button  style={{marginTop: '50px', marginBottom: '50px',width: '20rem'}} className="mx-auto d-block" type="submit">Book Appointement</Button>
+    </Card>
+    </Form>
 
-          <Form.Group as={Row}>
-            <Col sm={{ span: 10, offset: 2 }}>
-              <MainButton type="submit">Book appointment</MainButton>
-            </Col>
-          </Form.Group>
-        </Form>
-      </Row>
-    </Section>
   );
 };
 

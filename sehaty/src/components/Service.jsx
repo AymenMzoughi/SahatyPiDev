@@ -12,8 +12,7 @@ const Service = (props) => {
         <center>
           <Card.Title>{props.service}</Card.Title>
           <Card.Text>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit,
-            perferendis? Excepturi quas
+
           </Card.Text>
         </center>
       </Card.Body>

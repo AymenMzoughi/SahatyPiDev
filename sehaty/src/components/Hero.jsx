@@ -80,10 +80,9 @@ function Hero() {
             ></HeroTitle>
             <div>
               <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quis
-                nesciunt ratione dicta ad ipsum possimus repellat architecto
-                facilis sequi, officiis illo ipsa ab labore laborum porro nisi
-                vel iste. Molestiae!
+              Online reservation for doctors has become an increasingly popular option for patients seeking medical attention.
+               With just a few clicks, patients can browse through a list of available doctors, select a time slot 
+              that suits them, and book an appointment without ever having to leave their home .Adding to that we also offering online consultation .
               </p>
 
               <MainButton>Explore more</MainButton>

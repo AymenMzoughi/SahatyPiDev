@@ -1,6 +1,15 @@
 import styled from "styled-components";
 import { Button, Card, Container } from "react-bootstrap";
+
 export const MainButton = styled(Button)`
+  background-color: #16c0d7;
+  border-radius: 24px;
+  width: 200px;
+  margin-bottom: 10px
+  max-height: 40px;
+`;
+
+export const ProfileButton = styled(Button)`
   background-color: #16c0d7;
   border-radius: 24px;
   font-weight: bold;
@@ -8,6 +17,16 @@ export const MainButton = styled(Button)`
   width: max-content;
   max-height: 50px;
 `;
+
+export const Loginbutton = styled(Button)`
+  background-color: #16c0d7;
+  border-radius: 24px;
+  font-weight: bold;
+  padding: 12px 24px;
+  width: max-content;
+  max-height: 50px;
+`;
+
 export const HeroTitle = styled.h1`
   font-weight: bold;
   color: black;
