@@ -40,7 +40,7 @@ const Login = () => {
   };
   const login = async (mail, password) => {
     try {
-      const response = await axios.post("https://luminous-fairy-4c7c4a.netlify.app/user/login", { mail: inputs.mail, password: inputs.password });
+      const response = await axios.post("https://localhost:5000/user/login", { mail: inputs.mail, password: inputs.password });
       const token = response.data.user.token;
       const user = response.data.user
       console.log(user.role)
