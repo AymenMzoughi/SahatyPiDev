@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Modal, Container, Row, Col, Card, OverlayTrigger, Popover, Image, Tabs, Tab } from 'react-bootstrap';
@@ -288,14 +287,14 @@ const MedicalRecordsD = () => {
             <Button variant="primary" onClick={handleClick}>Search</Button> */}
             {medicalRecord ? (
                 <div>
-    
+
                     <Container style={{ margin: '50px' }} className="mx-auto ">
-                        
+
                     <figure className="text-center">
                         <blockquote className="blockquote">
                        <p>This is the medical record of your patient</p>
                         </blockquote>
-                       
+
                     </figure>
                         <Row md={10}>
                             {/* Images */}

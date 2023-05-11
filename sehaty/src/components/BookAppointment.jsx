@@ -58,7 +58,7 @@ const [appointment, setAppointment] = useState({
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} className="mx-auto d-block">
     <Card >
       <Card.Img variant="top" src={img} />
       <Card.Body className="mx-auto d-block" >
@@ -88,7 +88,7 @@ const [appointment, setAppointment] = useState({
           />  
 
       </Card.Body>
-      <button  style={{marginTop: '50px'}} type="submit" c   >Book Appointement</button>
+      <Button  style={{marginTop: '50px', marginBottom: '50px',width: '20rem'}} className="mx-auto d-block" type="submit">Book Appointement</Button>
     </Card>
     </Form>
 

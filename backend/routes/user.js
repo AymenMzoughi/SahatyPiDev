@@ -5,10 +5,10 @@ const express = require("express");
 const app = express();
 const cors = require('cors');
 app.use(express.static('uploads'));
-app.use(cors({ credentials: true, origin: "http://localhost:4000" }));
+
 
 const path = require("path");
-router.post("/notification", userController.notificationsAsSeen)
+router.get("/notification/:idUser", userController.notificationsAsSeen)
 router.post("/register", userController.signUpUser);
 router.post("/login", userController.loginUser);
 router.post("/forgetpassword", userController.forget);

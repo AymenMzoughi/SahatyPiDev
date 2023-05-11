@@ -26,18 +26,19 @@ import Notifications from "./views/Notifications";
 import Tips from "./views/Tips";
 import Room from "./views/Room";
 import Payment from "./views/payment";
+import Events from "./views/Events";
 import Dashboard from "./views/dashboard";
 import { useLocation } from 'react-router-dom';
 function App() {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem('user'));
   const userRole = user?.role || null;
   const location = useLocation();
   return (
     <div className="App">
       {location.pathname === '/dash' || location.pathname==='/dash/addTip' || location.pathname==='/dash/ListTip'|| location.pathname==='/dash/ambulance' || location.pathname==='/dash/hospital'|| location.pathname==='/dash/ListTip'|| location.pathname==='/dash/ambulance' || location.pathname==='/dash/medicalrecord'? null : <NavBar />}
-
+      {userRole !== "Patient" && userRole !== "Doctor" ? null : <Notifications />}
       <Routes>
-
+        
         <Route path="/contact" element={<Contact />} />
         <Route path="/Claim" element={<Claim />} />
         <Route path="/doctors" element={<DoctorView />} />
@@ -51,19 +52,22 @@ function App() {
         <Route path={"/patientlist/:idUser"} element={<PatientListDocteur />} />
         <Route path={"/addMedicalRecord/:idUser"} element={<AddMedicalRecord />} />
         <Route path={"/ambulance"} element={<AmbulanceServiceP />} />
+        <Route path="/events" element={<Events />} />
         <Route
           path={"/profile"}
           element={
-            userRole === "Docteur" ? (
+            userRole === "Doctor" ? (
               <ProfileD />
             ) : userRole === "Patient" ? (
               <ProfileP />
-            ) : (
-              <Navigate to="/" />
+            ) : userRole === "Pharmacist" ?(
+              <GestionPharmacie/>
+            ) :(
+              <Navigate to="/dash" />
             )
           }
         />
-        <Route path={"/notification"} element={<Notifications />} />
+        
         <Route path={"/profile"} element={<ProfileD />} />
         <Route path={"/Appointment/:idUser"} element={<BookAppointment />} />
         <Route path="/room/:roomId" element={<RoomPage />} />
@@ -76,7 +80,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
 
       </Routes>
-      <Footer />
+      {location.pathname === '/dash' || location.pathname==='/dash/addTip' || location.pathname==='/dash/ListTip'|| location.pathname==='/dash/ambulance' || location.pathname==='/dash/hospital'|| location.pathname==='/dash/ListTip'|| location.pathname==='/dash/ambulance' || location.pathname==='/dash/medicalrecord'? null : <Footer />}
     </div>
   );
 }

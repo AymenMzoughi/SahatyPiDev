@@ -17,6 +17,8 @@ const MedRouter = require('./routes/med');
 const ClaimRouter = require('./routes/claim')
 const tipsRouter = require("./routes/tips");
 const hospitalRouter = require("./routes/hospital");
+const eventRouter = require("./routes/events");
+
 mongoose.set("strictQuery", false);
 mongoose.connect(uri, {
   useNewUrlParser: true,
@@ -53,7 +55,7 @@ app.use('/med', MedRouter);
 app.use('/claim', ClaimRouter)
 app.use("/tip", tipsRouter);
 app.use("/hospital", hospitalRouter);
-
+app.use("/events", eventRouter);
 app.post("/payment", cors(), async (req, res) => {
 	let { amount, id } = req.body
 	try {

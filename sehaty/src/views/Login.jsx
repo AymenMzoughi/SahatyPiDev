@@ -44,17 +44,17 @@ const Login = () => {
       const token = response.data.user.token;
       const user = response.data.user
       console.log(user.role)
-      localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
       if(user.role == "Pharmacist"){
         history('/pharmacy')
       }
       else{
       history('/profile')
       }
-      window.location.reload()
+      
       dispatch(AuthActions.login(token));
-
+      window.location.reload()
     } catch (error) {
       console.log(error.response.data.message);
       setResponseMessage(error.response.data.message);
@@ -65,8 +65,9 @@ const Login = () => {
     e.preventDefault();
     console.log(inputs);
     // send http request
-    login().then(() => dispatch(AuthActions.login())).then(() => history("/user"));
+    login(inputs.mail, inputs.password).then(() => dispatch(AuthActions.login())).then(() => history("/user"));
   };
+  
 
 
   return (

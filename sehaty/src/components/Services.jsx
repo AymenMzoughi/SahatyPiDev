@@ -4,17 +4,17 @@ import { HeroTitle, Section } from "./StyledComponents";
 
 const Services = () => {
   const services = [
-    "Doctor search",
-    "Request Consultation",
-    "Make Appointment",
-    "Buy Medicals",
+    "Medical Tips and Events",
+    "Book Appointment with doctors",
+    "Pharmacies and medicaments",
+    "Online Ambulance Request"
   ];
   return (
     <Section>
       <Row>
-        <Col xs={12} lg={6}>
+        <Col xs={15} lg={8}>
           <HeroTitle style={{ height: "auto" }}>
-            Easy steps for your solution{" "}
+            What we can help you with ?
           </HeroTitle>
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo dolore

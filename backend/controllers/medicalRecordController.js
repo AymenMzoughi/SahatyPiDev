@@ -274,7 +274,7 @@ const addMedicalRecord = async (req, res, next) => {
     const parsedPrescriptions = JSON.parse(prescriptions);
 
     // Check if the doctorId refers to a user with role doctor/admin
-    const doctor = await UserModel.findOne({ _id: doctorId, $or: [{ role: 'Docteur' }, { role: 'admin' }] });
+    const doctor = await UserModel.findOne({ _id: doctorId, $or: [{ role: 'Doctor' }, { role: 'admin' }] });
     if (!doctor) {
       logger.info(`The user with id ${doctorId} is trying to add/update a medical record`, {
         timestamp: new Date().toISOString(),
@@ -708,53 +708,53 @@ const getPatientsForDoctor = async (req, res) => {
 const getMedicalRecordByPatientId = async (req, res, next) => {
   try {
     const { patientId } = req.params;
-
+    
     const medicalRecord = await MedicalRecord.findOne({ patientId })
-      .populate({
-        path: 'medicalImages',
-        select: '',
-        populate: {
-          path: 'doctorId',
-          select: 'firstname lastname',
-        },
-        options: { sort: { imageType: 1 } }
-      })
-      .select('')
-      .populate('patientId', 'firstname lastname')
-      .populate({
-        path: 'medications',
-        select: '',
-        populate: {
-          path: 'doctorId',
-          select: 'firstname lastname',
-        },
-      })
-      .populate({
-        path: 'treatments',
-        select: '',
-        populate: {
-          path: 'doctorId',
-          select: 'firstname lastname',
-        },
-      })
-      .populate({
-        path: 'allergies',
-        select: '',
-        populate: {
-          path: 'doctorId',
-          select: 'firstname lastname',
-        },
-      })
-      .populate({
-        path: 'prescriptions',
-        select: '',
-        populate: {
-          path: 'doctorId',
-          select: 'firstname lastname',
-        },
-      })
-      .lean()
-      .exec(); // Add the .exec() method at the end of the query chain
+  .populate({
+    path: 'medicalImages',
+    select: '',
+    populate: {
+      path: 'doctorId',
+      select: 'firstname lastname',
+    },
+    options: { sort: { imageType: 1 } }
+  })
+  .select('')
+  .populate('patientId', 'firstname lastname') // explicitly include firstname and lastname
+  .populate({
+    path: 'medications',
+    select: '',
+    populate: {
+      path: 'doctorId',
+      select: 'firstname lastname',
+    },
+  })
+  .populate({
+    path: 'treatments',
+    select: '',
+    populate: {
+      path: 'doctorId',
+      select: 'firstname lastname',
+    },
+  })
+  .populate({
+    path: 'allergies',
+    select: '',
+    populate: {
+      path: 'doctorId',
+      select: 'firstname lastname',
+    },
+  })
+  .populate({
+    path: 'prescriptions',
+    select: '',
+    populate: {
+      path: 'doctorId',
+      select: 'firstname lastname',
+    },
+  })
+  .lean()
+  .exec();
 
     if (!medicalRecord) {
       return res.status(404).json({ message: 'Medical record not found' });

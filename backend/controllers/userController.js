@@ -104,21 +104,35 @@ const editUser = async (req, res) => {
 
 
 //Get
-const getUser = async (req, res) => {
-  try {
-    const {userId}=req.params
-    const profile = await UserModel.findOne({userId});
+// const getUser = async (req, res) => {
+//   try {
+//     const {userId}=req.params.idUser
+//     const profile = await UserModel.findOne({userId});
   
      
-      res.json(profile)
+//       res.json(profile)
    
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send({
+//       message: "Error applying doctor account",
+//       success: false,
+//       error,
+//     });
+//   }
+// };
+
+const getUser = async (req, res) => {
+  const idUser = req.params.idUser;
+  try {
+    const user = await UserModel.findById(idUser);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    return res.status(200).json(user);
   } catch (error) {
-    console.log(error);
-    res.status(500).send({
-      message: "Error applying doctor account",
-      success: false,
-      error,
-    });
+    console.error(error);
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
@@ -250,7 +264,8 @@ const reset = async (req, res, next) => {
 const notificationsAsSeen =async (req, res) => {
 
   try {
-    const user = await UserModel.findOne({ _id: req.body.userId });
+    const userId = req.params.idUser;
+    const user = await UserModel.findOne({ userId });
     const unseenNotifications = user.unseenNotifications;
     const seenNotifications = user.seenNotifications;
     seenNotifications.push(...unseenNotifications);

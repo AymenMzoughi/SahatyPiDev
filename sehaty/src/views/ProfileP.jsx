@@ -53,6 +53,7 @@ const ProfileUser = () => {
     try {
       const response = await axios.put("http://localhost:5000/appointment/cancel", { appointmentId });
      console.log(response.data.message);
+     window.location.reload()
     } catch (error) {
       console.log(error.response.data.message);
     
@@ -107,7 +108,7 @@ const ProfileUser = () => {
   useEffect(() => {
     getAppointmentsData();
     fetchProfile().then((e) => { setProfile(e); });
-  }, [userId]);
+  }, []);
 
   return (
     // Modal Part
@@ -175,7 +176,7 @@ const ProfileUser = () => {
                     <p className="text-muted mb-4"></p>
                     <div className="d-flex justify-content-center mb-2">
                       <MDBBtn outline className="ms-1" onClick={toggleShow}>Appointement List</MDBBtn>
-                      <MDBBtn outline className="ms-1" href={`/patientlist/${userId}`}>Medical Record</MDBBtn>
+                      <MDBBtn outline className="ms-1" href={`/medicalRecordPatient/${userId}`}>Medical Record</MDBBtn>
                     </div>
                   </MDBCardBody>
                 </MDBCard>

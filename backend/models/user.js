@@ -69,7 +69,7 @@ const userSchema = new Schema({
     type: String,
   },
 
-
+  token: { type: String },
   resetToken: { type: String },
 
   seenNotifications: {
@@ -80,6 +80,7 @@ const userSchema = new Schema({
     type: Array,
     default: [],
   },
+  events: [{ type: Schema.Types.ObjectId, ref: "Event" }],
 },
 {
   timestamps: true,

@@ -23,3 +23,14 @@
 {"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c reserved ambulance 6445742349a75a10b5e5b610","timestamp":"2023-05-10T16:15:15.101Z"}
 {"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c unreserved ambulance 6445742349a75a10b5e5b610","timestamp":"2023-05-10T16:15:19.478Z"}
 {"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c reserved ambulance 6445742849a75a10b5e5b618","timestamp":"2023-05-10T18:12:15.382Z"}
+{"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c unreserved ambulance 6445742849a75a10b5e5b618","timestamp":"2023-05-11T00:20:56.823Z"}
+{"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c reserved ambulance 6445740f49a75a10b5e5b5f7","timestamp":"2023-05-11T00:21:01.622Z"}
+{"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c unreserved ambulance 6445740f49a75a10b5e5b5f7","timestamp":"2023-05-11T00:21:10.667Z"}
+{"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c reserved ambulance 6445742849a75a10b5e5b618","timestamp":"2023-05-11T00:21:13.547Z"}
+{"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c unreserved ambulance 6445742849a75a10b5e5b618","timestamp":"2023-05-11T00:21:15.813Z"}
+{"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c reserved ambulance 6445742849a75a10b5e5b618","timestamp":"2023-05-11T00:21:17.498Z"}
+{"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c unreserved ambulance 6445742849a75a10b5e5b618","timestamp":"2023-05-11T00:21:21.157Z"}
+{"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c reserved ambulance 6445741d49a75a10b5e5b608","timestamp":"2023-05-11T01:19:22.232Z"}
+{"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c unreserved ambulance 6445741d49a75a10b5e5b608","timestamp":"2023-05-11T01:19:24.371Z"}
+{"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c reserved ambulance 6445742849a75a10b5e5b618","timestamp":"2023-05-11T01:19:28.333Z"}
+{"level":"info","message":"Patient 6410e2b6672845f92a8ecc2c unreserved ambulance 6445742849a75a10b5e5b618","timestamp":"2023-05-11T01:19:30.188Z"}

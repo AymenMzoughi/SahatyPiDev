@@ -46,19 +46,15 @@ function NavBar() {
       newPages = [
         { name: "Home", path: "/home" },
         { name: "Doctors", path: "/doctors" },
-        { name: "Services", path: "/services" },
         { name: "Medical Record", path: `/medicalRecordPatient/${userId}` },
         { name: "Ambulance", path: "/ambulance" },
         { name: "Medical Tips", path:""},
       ];
-    } else if (role === "Docteur") {
+    } else if (role === "Doctor") {
       newPages = [
         { name: "Home", path: "/home" },
-        { name: "Doctors", path: "/doctors" },
-        { name: "Services", path: "/services" },
         { name: "Medical RecordD", path: `/medicalRecordDocteur/${userId}` },
-        { name: "List Patient", path: `/patientlist/${userId}` },
-        { name: "Appointment", path: "/appointment" },
+        // //{ name: "List Patient", path: `/patientlist/${userId}` },
       ];
     }
     else if (role === 'Pharmacist') {
@@ -67,11 +63,9 @@ function NavBar() {
   } else {
     newPages = [
       { name: 'Home', path: '/home' },
-      { name: 'Doctors', path: '/doctors' },
-      { name: 'Services', path: '/services' },
-      { name: 'Appointment', path: '/appointment' },
-      { name: 'Contact', path: '/contact' },
       { name: 'Pharmacy', path: '/pharmacy' },
+      { name: "Medical Tips", path:""},
+      
     ];
   }
 
@@ -147,18 +141,11 @@ function NavBar() {
                 </Loginbutton>
               </ButtonGroup>
             ) : (
-              <>
-               <div className="d-flex jus layout-action-icon">
-                <Badge 
-                  count={user?.unseenNotifications.length}
-                  onClick={() => navigate("/notification")}
-                />
-                <Notifications/>
-              </div>
+            
               <AccountCollapse />
               
              
-              </>
+              
             )}
           </Form>
         </Navbar.Collapse>

@@ -4,19 +4,25 @@ const authSlice = createSlice({
     name: 'auth',
     initialState: { isLoggedIn: false, role: null },
     reducers: {
-        login: {
-            reducer: (state, action) => {
+        reducers: {
+            login: {
+              reducer: (state, action) => {
                 state.isLoggedIn = true;
-                state.role = action.payload;
+                state.role = action.payload.role;
+                state.userId = action.payload.userId;
+              },
+              prepare: (userId, role) => {
+                return { payload: { userId, role } };
+              },
             },
-            prepare: (role) => {
-                return { payload: role };
-            },
+        
+          
         },
         logout(state) {
             state.isLoggedIn = false;
             state.role = null;
-            localStorage.removeItem('user');
+            localStorage.removeItem("user");
+            localStorage.removeItem("token");
         },
     },
 });
@@ -28,6 +34,7 @@ export const initializeStore = () => {
     const user = JSON.parse(localStorage.getItem("user"));
     const userRole = user?.role || null;
     const isLoggedIn = token ? true : false;
+    
     const preloadedState = {
         auth: {
             isLoggedIn,

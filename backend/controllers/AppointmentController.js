@@ -142,7 +142,6 @@ const getAppointments = async (req, res) => {
     const status = "pending"
     console.log(userId);
     const appointments = await Appointment.find({ userId, status })
-      .select('-doctorId')
       .populate('userId', 'firstname lastname')
       .lean()
       .exec();
@@ -158,6 +157,7 @@ const getAppointments = async (req, res) => {
       status: `${appointment.status}`,
       id: `${appointment._id}`
     }));
+    console.log("appoint", appointments)
     console.log(appointmentData)
     res.json(appointmentData);
   } catch (error) {
@@ -167,6 +167,7 @@ const getAppointments = async (req, res) => {
     });
   }
 };
+
 
 const getAppointmentsForPatient = async (req, res) => {
   try {
@@ -230,7 +231,7 @@ const changeAppointmentStatus = async (req, res) => {
     const isDoctor = await User.findOne(userId)
 
 
-    if (isDoctor.role != "Docteur") {
+    if (isDoctor.role != "Doctor") {
       return res.status(403).json({ error: 'Unauthorized' });
     } else {
       const { appointmentId } = req.body;

@@ -14,7 +14,7 @@ const Doctor = () => {
   const getDoctorData = async () => {
     try {
       //   dispatch(showLoading());
-      const role = "Docteur"
+      const role = "Doctor"
       const response = await axios.get(
         `http://localhost:5000/user/getAllDoctors/${role}`
 

@@ -12,10 +12,6 @@ import {
   MDBTableBody,
   MDBTable,
   MDBTableHead,
-  MDBPopover,
-  MDBPopoverHeader,
-  MDBPopoverBody,
-  MDBTooltip,
   MDBCol,
   MDBContainer,
   MDBRow,
@@ -37,6 +33,7 @@ const ProfileD = () => {
 
   const user = JSON.parse(localStorage.getItem("user"));
   const userId = user._id;
+  const firstname = user.firstname
 
   const [myUser, setMyUser] = useState({
     numero: "",
@@ -177,7 +174,7 @@ const ProfileD = () => {
                   <MDBCardBody className="text-center">
 
                     <MDBCardImage
-                      src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                      src={doclogo}
                       alt="avatar"
                       className="rounded-circle"
                       style={{ width: '150px' }}

@@ -162,7 +162,7 @@ const MedicalRecords = () => {
     };
 
     if (!medicalRecord) {
-        return <div>Loading...</div>;
+        return <div>You don't have a medical record</div>;
     }
 
     return (

@@ -29,9 +29,7 @@ const AccountCollapse = () => {
         }}
         show={showDropdown}
       >
-        <Dropdown.Item eventKey="1" href="/profile">Account information</Dropdown.Item>
-        <Dropdown.Item eventKey="2">Another action</Dropdown.Item>
-        <Dropdown.Item eventKey="3">Something else here</Dropdown.Item>
+        <Dropdown.Item eventKey="1" href="/profile">My Profile</Dropdown.Item>
         <Dropdown.Divider />
         <Dropdown.Item
           eventKey="4"
