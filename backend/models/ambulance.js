@@ -1,34 +1,38 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const ambulanceSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   available: {
     type: Boolean,
-    default: true,
+    default: true
   },
   reservedBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
+    ref: 'user'
   },
-  createdAt: { type: Date },
-
+  hospital: {  
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Hospital'
+  },
+  createdAt: { type: Date},
   latitude: {
     type: Number,
-    required: true,
+
   },
   longitude: {
     type: Number,
-    required: true,
+
   },
-  longitudeUser: {
-    type: Number,
+  longitudeUser:{
+    type: String,
   },
-  latitudeUser: {
-    type: Number,
-  },
+  latitudeUser:{
+    type: String,
+  }
 });
 
-module.exports = mongoose.model("Ambulance", ambulanceSchema);
+module.exports = mongoose.model('Ambulance', ambulanceSchema);

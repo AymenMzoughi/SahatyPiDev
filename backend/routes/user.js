@@ -1,17 +1,22 @@
 const router = require("express").Router();
 const userController = require("../controllers/userController");
 const requireAuth = require("../middleware/requireAuth");
+const express = require("express");
+const app = express();
+const cors = require('cors');
+app.use(express.static('uploads'));
+
+
+const path = require("path");
+router.get("/notification/:idUser", userController.notificationsAsSeen)
 router.post("/register", userController.signUpUser);
 router.post("/login", userController.loginUser);
-router.post("/forget-password", userController.forget);
-router.post("/reset-password", userController.reset);
-
+router.post("/forgetpassword", userController.forget);
+router.post("/resetpassword", userController.reset);
+router.get("/getAllDoctors/:role", userController.getAllDoctors);
 // Protected route
-router.use(requireAuth);
-router.get("/login", userController.getUser);
-router.put("/login", userController.editUser);
-router.post("/addClaim", userController.addClaim);
-router.post("/bookAppointment", userController.bookAppointment);
-router.post("/updateClaim/:claimId", userController.updateClaim);
-router.delete("/deleteClaim/:claimId", userController.deleteClaim);
+// router.use(requireAuth);
+router.get("/profile/:idUser", userController.getUser);
+router.put("/edit/:idUser", userController.editUser);
+
 module.exports = router;

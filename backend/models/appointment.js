@@ -1,22 +1,11 @@
 const mongoose = require("mongoose");
+const { Schema } = mongoose;
 const appointmentSchema = new mongoose.Schema(
   {
-    userId: {
-      type: String,
-      required: true,
-    },
-    doctorId: {
-      type: String,
-      required: true,
-    },
-    doctorInfo: {
-      type: Object,
-      required: false,
-    },
-    userInfo: {
-      type: Object,
-      required: false,
-    },
+    userId: { type: Schema.Types.ObjectId, ref: 'User' },
+    
+    doctorId: { type: Schema.Types.ObjectId, ref: 'User' },
+   
     date: {
       type: String,
       required: true,
@@ -29,11 +18,15 @@ const appointmentSchema = new mongoose.Schema(
       type: String,
       required: true,
       default: "pending",
+
     },
+ 
+    type: { type: String, enum: ['online', 'faceToFace'],required:true },
   },
   {
     timestamps: true,
   }
+  
 );
 
 const appointmentModel = mongoose.model("appointment", appointmentSchema);

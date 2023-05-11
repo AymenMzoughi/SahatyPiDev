@@ -1,51 +1,92 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+ 
   firstname: {
     type: String,
-    required: true,
+
   },
   lastname: {
     type: String,
-    require: true,
+
   },
   numero: {
     type: Number,
-    require: true,
+
   },
   pdp: {
     type: String,
-    require: true,
+
   },
   mail: {
     type: String,
-    required: true,
-    unique: true,
+
+    
   },
-  role: { type: String },
+  role: { type: String, required:true,},
   password: {
     type: String,
-    required: true,
-    minlength: 8,
+
   },
-  token: {
+  website: {
+    type: String,
+
+  },
+  address: {
+    type: String,
+
+  },
+  specialization: {
+    type: String,
+
+  },
+  experience: {
+    type: String,
+
+  },
+  feePerCunsultation: {
+    type: Number,
+
+  },
+  timings: {
+    type: Array,
+
+  },
+  status: {
+    type: String,
+    default: "pending",
+  },
+  instagram: {
     type: String,
   },
+  facebook: {
+    type: String,
+  },
+  twitter: {
+    type: String,
+  },
+
+  token: { type: String },
   resetToken: { type: String },
+
   seenNotifications: {
-    required: false,
     type: Array,
     default: [],
   },
   unseenNotifications: {
-    required: false,
     type: Array,
     default: [],
   },
-});
+  events: [{ type: Schema.Types.ObjectId, ref: "Event" }],
+},
+{
+  timestamps: true,
+},
+  
+);
 
 //Sign up static method
 userSchema.statics.signUp = async function (reqBody) {
