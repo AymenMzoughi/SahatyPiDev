@@ -7,7 +7,7 @@ const {
 	getOne,
 	updateOne,
 	updateLogo,
-} = require('../controllers/pharmacyController.js');
+} = require('../controllers/pharmacycontroller.js');
 
 const multer = require('multer');
 const path = require('path');
