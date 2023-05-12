@@ -7,7 +7,7 @@ const {
 	getOne,
 	updateOne,
 	updateImage,
-} = require('../controllers/medcontroller.js');
+} = require('../controllers/medController.js');
 
 const multer = require('multer');
 const path = require('path');
